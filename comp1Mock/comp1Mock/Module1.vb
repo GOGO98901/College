@@ -158,6 +158,10 @@ ByVal Board(,) As Char)
         ValidMove = True
         'Check x coordinate is valid
         If XCoordinate < 1 Or XCoordinate > 3 Then ValidMove = False
+        'Check y coordinate is valid
+        If YCoordinate < 1 Or YCoordinate > 3 Then ValidMove = False
+        'Check coordinates are empty
+        If Board(XCoordinate, YCoordinate) = PlayerOneSymbol Or Board(XCoordinate, YCoordinate) = PlayerTwoSymbol Then ValidMove = False
         CheckValidMove = ValidMove
     End Function
 
