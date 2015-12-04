@@ -156,8 +156,7 @@
         Console.WriteLine()
     End Sub
 
-    Function CheckValidMove(ByVal XCoordinate As Integer, ByVal YCoordinate As Integer, _
-ByVal Board(,) As Char)
+    Function CheckValidMove(ByVal XCoordinate As Integer, ByVal YCoordinate As Integer, ByVal Board(,) As Char)
         Dim ValidMove As Boolean
         ValidMove = True
         'Check x coordinate is valid
@@ -175,12 +174,10 @@ ByVal Board(,) As Char)
         Dim XOrOHasWon As Boolean
         XOrOHasWon = False
         For Column = 1 To 3
-            If Board(Column, 1) = Board(Column, 2) And Board(Column, 2) = Board(Column, 3) _
-                                    And Board(Column, 2) <> " " Then XOrOHasWon = True
+            If Board(Column, 1) = Board(Column, 2) And Board(Column, 2) = Board(Column, 3) And Board(Column, 2) <> " " Then XOrOHasWon = True
         Next
         For Row = 1 To 3
-            If Board(1, Row) = Board(2, Row) And Board(2, Row) = Board(3, Row) _
-                            And Board(2, Row) <> " " Then XOrOHasWon = True
+            If Board(1, Row) = Board(2, Row) And Board(2, Row) = Board(3, Row) And Board(2, Row) <> " " Then XOrOHasWon = True
         Next
         CheckXOrOHasWon = XOrOHasWon
     End Function
