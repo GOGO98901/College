@@ -22,12 +22,13 @@
     Dim Answer As Char
 
     Sub Main()
+        Console.Title = "Skeleton Program for the AQA COMP1 Summer 2010 examination"
         Randomize()
         Console.Write("What is the name of player one? ")
         PlayerOneName = Console.ReadLine()
         Console.Write("What is the name of player two? ")
         PlayerTwoName = Console.ReadLine()
-        Console.WriteLine()
+        Console.Clear()
         PlayerOneScore = 0
         PlayerTwoScore = 0
         Do 'Choose player one’s symbol
@@ -46,26 +47,26 @@
         End If
         StartSymbol = GetWhoStarts()
         Do 'Play a game
+            Console.Clear()
             NoOfMoves = 0
             GameHasBeenDrawn = False
             GameHasBeenWon = False
             ClearBoard(Board)
-            Console.WriteLine()
             DisplayBoard(Board)
-            If StartSymbol = PlayerOneSymbol Then
-                Console.WriteLine(PlayerOneName & " starts playing " & StartSymbol)
-            Else
-                Console.WriteLine(PlayerTwoName & " starts playing " & StartSymbol)
-            End If
-            Console.WriteLine()
             CurrentSymbol = StartSymbol
             Do 'Play until a player wins or the game is drawn
+                If CurrentSymbol = PlayerOneSymbol Then
+                    Console.WriteLine("It is " & PlayerOneName & "'s turn, you are " & CurrentSymbol)
+                Else
+                    Console.WriteLine("It is " & PlayerTwoName & "'s turn, you are " & CurrentSymbol)
+                End If
                 Do 'Get a valid move
                     GetMoveCoordinates(XCoord, YCoord)
                     ValidMove = CheckValidMove(XCoord, YCoord, Board)
                     If Not ValidMove Then Console.WriteLine("Coordinates invalid, please try again")
                 Loop Until ValidMove
                 Board(XCoord, YCoord) = CurrentSymbol
+                Console.Clear()
                 DisplayBoard(Board)
                 GameHasBeenWon = CheckXOrOHasWon(Board)
                 NoOfMoves = NoOfMoves + 1
@@ -118,7 +119,6 @@
             Next
             Console.WriteLine()
         Next
-        Console.WriteLine()
     End Sub
 
     Sub ClearBoard(ByRef Board(,) As Char)
