@@ -24,11 +24,13 @@
     Sub Main()
         Console.Title = "Skeleton Program for the AQA COMP1 Summer 2010 examination"
         Randomize()
+        WriteTitle()
         Console.Write("What is the name of player one? ")
         PlayerOneName = Console.ReadLine()
         Console.Write("What is the name of player two? ")
         PlayerTwoName = Console.ReadLine()
         Console.Clear()
+        WriteTitle()
         PlayerOneScore = 0
         PlayerTwoScore = 0
         Do 'Choose player one’s symbol
@@ -52,7 +54,10 @@
             GameHasBeenDrawn = False
             GameHasBeenWon = False
             ClearBoard(Board)
+            WriteTitle()
+            Console.WriteLine()
             DisplayBoard(Board)
+            Console.WriteLine()
             CurrentSymbol = StartSymbol
             Do 'Play until a player wins or the game is drawn
                 If CurrentSymbol = PlayerOneSymbol Then
@@ -67,7 +72,10 @@
                 Loop Until ValidMove
                 Board(XCoord, YCoord) = CurrentSymbol
                 Console.Clear()
+                WriteTitle()
+                Console.WriteLine()
                 DisplayBoard(Board)
+                Console.WriteLine()
                 GameHasBeenWon = CheckXOrOHasWon(Board)
                 NoOfMoves = NoOfMoves + 1
                 If Not GameHasBeenWon Then
@@ -105,6 +113,11 @@
             Console.Write("Another game Y/N?")
             Answer = Console.ReadLine()
         Loop Until Answer = "N" Or Answer = "n"
+    End Sub
+
+    Sub WriteTitle()
+        Console.WriteLine(Console.Title)
+        Console.WriteLine("-------------------------------------------------------------------------------")
     End Sub
 
     Sub DisplayBoard(ByVal Board(,) As Char)
