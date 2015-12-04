@@ -179,6 +179,8 @@
         For Row = 1 To 3
             If Board(1, Row) = Board(2, Row) And Board(2, Row) = Board(3, Row) And Board(2, Row) <> " " Then XOrOHasWon = True
         Next
+        If Board(1, 1) = Board(2, 2) And Board(2, 2) = Board(3, 3) And Board(3, 3) <> " " Then XOrOHasWon = True
+        If Board(1, 3) = Board(2, 2) And Board(2, 2) = Board(1, 3) And Board(1, 3) <> " " Then XOrOHasWon = True
         CheckXOrOHasWon = XOrOHasWon
     End Function
 
