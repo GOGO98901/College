@@ -25,17 +25,15 @@
         Console.Title = "Skeleton Program for the AQA COMP1 Summer 2010 examination"
         Randomize()
         WriteTitle()
-        Console.Write("What is the name of player one? ")
-        PlayerOneName = Console.ReadLine()
-        Console.Write("What is the name of player two? ")
-        PlayerTwoName = Console.ReadLine()
+        PlayerOneName = getInput("What is the name of player one?")
+        PlayerTwoName = getInput("What is the name of player two?")
         Console.Clear()
         WriteTitle()
         PlayerOneScore = 0
         PlayerTwoScore = 0
         Do 'Choose player one’s symbol
-            Console.Write(PlayerOneName & " what symbol do you wish to use, X or O? ")
-            PlayerOneSymbol = Console.ReadLine()
+            PlayerOneSymbol = getInput(PlayerOneName & " what symbol do you wish to use, X or O? ")
+
             Console.WriteLine()
             If Not (PlayerOneSymbol = "X" Or PlayerOneSymbol = "O") Then
                 Console.WriteLine("Symbol to play must be uppercase X or O")
@@ -145,10 +143,16 @@
     End Sub
 
     Sub GetMoveCoordinates(ByRef XCoordinate As Integer, ByRef YCoordinate As Integer)
-        Console.Write("Enter x coordinate: ")
-        XCoordinate = Console.ReadLine()
-        Console.Write("Enter y coordinate: ")
-        YCoordinate = Console.ReadLine()
+        Dim input As String
+        Do
+            input = getInput("Enter x coordinate")
+        Loop Until (IsNumeric(input))
+        XCoordinate = input
+        input = vbNullString
+        Do
+            input = getInput("Enter y coordinate")
+        Loop Until (IsNumeric(input))
+        YCoordinate = input
         Console.WriteLine()
     End Sub
 
@@ -191,5 +195,13 @@ ByVal Board(,) As Char)
             WhoStarts = "O"
         End If
         GetWhoStarts = WhoStarts
+    End Function
+
+    Function getInput(text As String) As String
+        Console.WriteLine(text)
+        Console.Write("> ")
+        Dim input As String = Console.ReadLine()
+        If Len(input) > 0 Then Return input
+        Return getInput(text)
     End Function
 End Module
