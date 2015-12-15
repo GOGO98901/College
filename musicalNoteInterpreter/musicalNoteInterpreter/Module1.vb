@@ -1,18 +1,15 @@
 ﻿Module Module1
 
     Sub Main()
-        'livePlay()
+        ' livePlay()
 
         Dim jingle As String = "E:40250,E:40250,E:40250, ,E:40250,E:40250,E:40500,E:40250,G:40250,C:40250,D:40250,E:40750,F:40250,F:40250,F:40250,F:40250,F:40250,E:40250,E:40250,E:40250,E:40250,E:40250,D:40250,D:40250,D:40250,E:40250,D:40250,G:40250"
-
+        Dim jingle2 As String = "E:40250,E:40250,E:40250, ,E:40250,E:40250,E:40250, ,E:40250,G:40250,C:40250,D:40250,E:40250, , ,F:40250,F:40250,F:40250, ,F:40250,F:40250,E:40250,E:40250,E:40250,E:40250,E:40250,D:40250,D:40250,E:40250,D:40250, ,G:40250, ,E:40250,E:40250,E:40250, ,E:40250,E:40250,E:40250, ,E:40250,G:40250,C:40250,D:40250,E:40250, , ,F:40250,F:40250,F:40250,F:40250,F:40250,E:40250,E:40250,E:40250,E:40250,G:40250,G:40250,F:40250,D:40250,C:40250"
         Dim notestr As String
         Dim Notes() As String
         Dim notelength As Integer
         Dim thisNote As Single
-        'FileOpen(1, "mytune.csv", OpenMode.Input, OpenAccess.Read)
-        'notestr = LineInput(1)
-        'FileClose(1)
-        notestr = jingle
+        notestr = jingle2
         Notes = notestr.Split(",")
         For i = 0 To UBound(Notes)
             thisNote = (Num2Freq(NoteToNum(Notes(i))))
@@ -31,7 +28,7 @@
         While livenote <> "z"
             livenote = Console.ReadKey.KeyChar
             thisnote = (Num2Freq(NoteToNum(livenote & ":4")))
-            Console.Beep(thisnote, 500)
+            Console.Beep(thisnote, 250)
         End While
     End Sub
 
