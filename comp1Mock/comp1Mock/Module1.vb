@@ -25,14 +25,7 @@
         Console.Title = "Skeleton Program for the AQA COMP1 Summer 2010 examination"
         Randomize()
         WriteTitle()
-        PlayerOneName = getInput("What is the name of player one?")
-        PlayerTwoName = getInput("What is the name of player two?")
-        If PlayerOneName = PlayerTwoName Then
-            Do
-                Console.WriteLine("Player two can not have the same name as player One!")
-                PlayerTwoName = getInput("What is the name of player two?")
-            Loop Until Not (PlayerOneName = PlayerTwoName)
-        End If
+        GetPlayerNames()
         Console.Clear()
         WriteTitle()
         PlayerOneScore = 0
@@ -119,9 +112,21 @@
         Loop Until Answer = "N" Or Answer = "n"
     End Sub
 
+
     Sub WriteTitle()
         Console.WriteLine(Console.Title)
         Console.WriteLine("-------------------------------------------------------------------------------")
+    End Sub
+
+    Sub GetPlayerNames()
+        PlayerOneName = getInput("What is the name of player one?")
+        PlayerTwoName = getInput("What is the name of player two?")
+        If PlayerOneName = PlayerTwoName Then
+            Do
+                Console.WriteLine("Player two can not have the same name as player One!")
+                PlayerTwoName = getInput("What is the name of player two?")
+            Loop Until Not (PlayerOneName = PlayerTwoName)
+        End If
     End Sub
 
     Sub DisplayBoard(ByVal Board(,) As Char)
