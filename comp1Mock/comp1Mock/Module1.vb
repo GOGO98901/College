@@ -7,8 +7,8 @@
     Dim Board(3, 3) As Char
     Dim PlayerOneName As String
     Dim PlayerTwoName As String
-    Dim PlayerOneScore As Single
-    Dim PlayerTwoScore As Single
+    Dim PlayerOneScore As Double
+    Dim PlayerTwoScore As Double
     Dim XCoord As Integer
     Dim YCoord As Integer
     Dim NoOfMoves As Integer
@@ -27,21 +27,21 @@
         WriteTitle()
         PlayerOneName = getInput("What is the name of player one?")
         PlayerTwoName = getInput("What is the name of player two?")
-        Do
-            Console.WriteLine("Player two can not have the same name as player One!")
-            PlayerTwoName = getInput("What is the name of player two?")
-        Loop While PlayerOneName = PlayerTwoName
+        If PlayerOneName = PlayerTwoName Then
+            Do
+                Console.WriteLine("Player two can not have the same name as player One!")
+                PlayerTwoName = getInput("What is the name of player two?")
+            Loop Until Not (PlayerOneName = PlayerTwoName)
+        End If
         Console.Clear()
         WriteTitle()
         PlayerOneScore = 0
         PlayerTwoScore = 0
         Do 'Choose player one’s symbol
-            PlayerOneSymbol = getInput(PlayerOneName & " what symbol do you wish to use, X or O? ")
-
+            PlayerOneSymbol = getInput(PlayerOneName & " what symbol do you wish to use, X or O? ").ToUpper
             Console.WriteLine()
             If Not (PlayerOneSymbol = "X" Or PlayerOneSymbol = "O") Then
-                Console.WriteLine("Symbol to play must be uppercase X or O")
-                Console.WriteLine()
+                Console.WriteLine("You can only enter the symbols X or O")
             End If
         Loop Until PlayerOneSymbol = "X" Or PlayerOneSymbol = "O"
         If PlayerOneSymbol = "X" Then
@@ -102,6 +102,8 @@
                 End If
             Else
                 Console.WriteLine("A draw this time!")
+                PlayerOneScore = PlayerOneScore + 0.5
+                PlayerTwoScore = PlayerTwoScore + 0.5
             End If
             Console.WriteLine()
             Console.WriteLine(PlayerOneName & " your score is: " & PlayerOneScore)
@@ -160,44 +162,39 @@
         Console.WriteLine()
     End Sub
 
-    Function CheckValidMove(ByVal XCoordinate As Integer, ByVal YCoordinate As Integer, ByVal Board(,) As Char)
-        Dim ValidMove As Boolean
-        ValidMove = True
+    Function CheckValidMove(ByVal XCoordinate As Integer, ByVal YCoordinate As Integer, ByVal Board(,) As Char) As Boolean
         'Check x coordinate is valid
-        If XCoordinate < 1 Or XCoordinate > 3 Then ValidMove = False
+        If XCoordinate < 1 Or XCoordinate > 3 Then Return False
         'Check y coordinate is valid
-        If YCoordinate < 1 Or YCoordinate > 3 Then ValidMove = False
+        If YCoordinate < 1 Or YCoordinate > 3 Then Return False
         'Check coordinates are empty
-        If Board(XCoordinate, YCoordinate) = PlayerOneSymbol Or Board(XCoordinate, YCoordinate) = PlayerTwoSymbol Then ValidMove = False
-        CheckValidMove = ValidMove
+        If Board(XCoordinate, YCoordinate) = PlayerOneSymbol Or Board(XCoordinate, YCoordinate) = PlayerTwoSymbol Then Return False
+        'Anything that lasted this far is true
+        Return True
     End Function
 
     Function CheckXOrOHasWon(ByVal Board(,) As Char) As Boolean
         Dim Row As Integer
         Dim Column As Integer
-        Dim XOrOHasWon As Boolean
-        XOrOHasWon = False
         For Column = 1 To 3
-            If Board(Column, 1) = Board(Column, 2) And Board(Column, 2) = Board(Column, 3) And Board(Column, 2) <> " " Then XOrOHasWon = True
+            If Board(Column, 1) = Board(Column, 2) And Board(Column, 2) = Board(Column, 3) And Board(Column, 2) <> " " Then Return True
         Next
         For Row = 1 To 3
-            If Board(1, Row) = Board(2, Row) And Board(2, Row) = Board(3, Row) And Board(2, Row) <> " " Then XOrOHasWon = True
+            If Board(1, Row) = Board(2, Row) And Board(2, Row) = Board(3, Row) And Board(2, Row) <> " " Then Return True
         Next
-        If Board(1, 1) = Board(2, 2) And Board(2, 2) = Board(3, 3) And Board(3, 3) <> " " Then XOrOHasWon = True
-        If Board(1, 3) = Board(2, 2) And Board(2, 2) = Board(1, 3) And Board(1, 3) <> " " Then XOrOHasWon = True
-        CheckXOrOHasWon = XOrOHasWon
+        If Board(1, 1) = Board(2, 2) And Board(2, 2) = Board(3, 3) And Board(3, 3) <> " " Then Return True
+        If Board(1, 3) = Board(2, 2) And Board(2, 2) = Board(1, 3) And Board(1, 3) <> " " Then Return True
+        Return False
     End Function
 
     Function GetWhoStarts() As Char
         Dim RandomNo As Integer
-        Dim WhoStarts As Char
         RandomNo = Rnd() * 100
         If RandomNo Mod 2 = 0 Then
-            WhoStarts = "X"
+            Return "X"
         Else
-            WhoStarts = "O"
+            Return "O"
         End If
-        GetWhoStarts = WhoStarts
     End Function
 
     Function getInput(text As String) As String
@@ -205,6 +202,7 @@
         Console.Write("> ")
         Dim input As String = Console.ReadLine()
         If Len(input) > 0 Then Return input
+        Console.WriteLine("You must input something!")
         Return getInput(text)
     End Function
 End Module
