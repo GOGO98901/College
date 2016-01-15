@@ -1,0 +1,6 @@
+﻿Hello world
+"Hello world"
+some, comma, delimited, data
+some     tab     delimited     data
+"commas", "and", "quotes"
+"this is the last line in quotes"
