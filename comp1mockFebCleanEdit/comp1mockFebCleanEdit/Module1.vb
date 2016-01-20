@@ -3,9 +3,7 @@
 'written by the AQA COMP1 Programmer Team
 'developed in the Visual Studio 2008 (Console Mode) programming environment (VB.NET)
 
-Module SecretMessages
-
-
+Module Module1
     Sub Main()
         Dim Ciphertext As String
         Dim Plaintext As String
@@ -17,6 +15,7 @@ Module SecretMessages
         Dim N As Integer
         Ciphertext = ""
         Plaintext = ""
+        Console.Title = "Skeleton Program code for the AQA COMP1 Summer 2013 examination"
         Do
             DisplayMenu()
             Choice = GetMenuChoice()
@@ -63,7 +62,7 @@ Module SecretMessages
     End Sub
 
     Sub DisplayMenu()
-        Console.WriteLine()
+        Console.Clear()
         Console.WriteLine("PLAINTEXT OPTIONS")
         Console.WriteLine("  a.  Get plaintext from user")
         Console.WriteLine("  b.  Display plaintext")
