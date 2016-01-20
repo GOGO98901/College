@@ -1,12 +1,14 @@
-﻿Module Module1
+﻿Imports System.IO
+
+Module Module1
 
     Dim _title As String = "File Handlering Programming Tasks"
     Dim _sep As String = "-------------------------------------------------------------------------------"
 
-    Structure binary
-        Dim product As String
-        Dim Price As Single
-        Dim Cost As Single
+    <Serializable()> Structure Binary
+        Dim Product As String
+        Dim Price As Integer
+        Dim Cost As Integer
     End Structure
 
     Sub Main()
@@ -30,19 +32,21 @@
                 Call title()
                 Console.WriteLine("Enter a number bellow to select that task or type '0' to exit")
                 'Console.WriteLine("---------------{  Options  }-------------")
-                'Console.WriteLine("0: exit")
+                'Console.WriteLine("0 : exit")
                 Console.WriteLine("-------{ Reading with known length }------")
-                Console.WriteLine("1: Seperated by line")
-                Console.WriteLine("2: Seperated by commas")
-                Console.WriteLine("3: Adding numbers by line")
-                Console.WriteLine("4: Adding numbers by commas")
+                Console.WriteLine("1 : Seperated by line")
+                Console.WriteLine("2 : Seperated by commas")
+                Console.WriteLine("3 : Adding numbers by line")
+                Console.WriteLine("4 : Adding numbers by commas")
                 Console.WriteLine("------{ Reading with unknown length }-----")
-                Console.WriteLine("5: Reading")
-                Console.WriteLine("6: Adding up")
+                Console.WriteLine("5 : Reading")
+                Console.WriteLine("6 : Adding up")
                 Console.WriteLine("---------{ Writing to text files }--------")
-                Console.WriteLine("7: Writing single line")
-                Console.WriteLine("8: Appending single line")
+                Console.WriteLine("7 : Writing single line")
+                Console.WriteLine("8 : Appending single line")
                 Console.WriteLine("-------{ Writing binary structure }-------")
+                Console.WriteLine("9 : Write structure then read")
+                Console.WriteLine("10: Read structure from task 9")
                 Console.WriteLine()
                 Console.Write("> ")
                 input = Console.ReadLine()
@@ -81,6 +85,10 @@
                     Call writeSeven()
                 ElseIf taskId = 8 Then
                     Call writeEight()
+                ElseIf taskId = 9 Then
+                    Call readWriteNine()
+                ElseIf taskId = 10 Then
+                    Call readTen()
                 End If
                 Console.WriteLine("Do you want to run this again? (y/n)")
                 Console.Write("> ")
@@ -228,6 +236,53 @@
         FileOpen(1, "testFile5.txt", OpenMode.Append)
         Write(1, input)
         FileClose(1)
+    End Sub
+
+    Sub readWriteNine()
+        Dim strut As New Binary
+        Dim recovered As New Binary
+
+        strut.Product = "Bag of air"
+        strut.Price = 60
+        strut.Cost = 20
+
+        Console.WriteLine("Data for saving")
+        Console.WriteLine("strut.Product = " & strut.Product)
+        Console.WriteLine("strut.Price = " & strut.Price)
+        Console.WriteLine("strut.Cost = " & strut.Cost)
+        Console.WriteLine("Saving")
+        Console.WriteLine(_sep)
+
+        Dim BF As New System.Runtime.Serialization.Formatters.Binary.BinaryFormatter()
+        Dim MS As New System.IO.MemoryStream()
+        BF.Serialize(MS, strut)
+        My.Computer.FileSystem.WriteAllBytes("structure.bin", MS.GetBuffer(), False)
+
+        Console.WriteLine("Opening")
+        Dim bytes As Byte() = My.Computer.FileSystem.ReadAllBytes("structure.bin")
+        recovered = DirectCast(BF.Deserialize(New System.IO.MemoryStream(bytes)), Binary)
+
+
+        Console.WriteLine("recovered.Product = " & recovered.Product)
+        Console.WriteLine("recovered.Price = " & recovered.Price)
+        Console.WriteLine("recovered.Cost = " & recovered.Cost)
+
+        Console.WriteLine(_sep)
+    End Sub
+
+    Sub readTen()
+        Dim strut As New Binary
+        Console.WriteLine("Profit Margin from file from task 9")
+        If File.Exists("structure.bin") Then
+            Dim BF As New System.Runtime.Serialization.Formatters.Binary.BinaryFormatter()
+            Dim bytes As Byte() = My.Computer.FileSystem.ReadAllBytes("structure.bin")
+            strut = DirectCast(BF.Deserialize(New System.IO.MemoryStream(bytes)), Binary)
+
+            Console.WriteLine("Profit Margin " & (strut.Price - strut.Cost))
+        Else
+            Console.WriteLine("File not found! Please run task 9")
+        End If
+        Console.WriteLine(_sep)
     End Sub
 
     Function checkInput(input As String) As Boolean
