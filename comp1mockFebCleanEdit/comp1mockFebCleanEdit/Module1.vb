@@ -120,10 +120,16 @@ Module Module1
     End Function
 
     Function GetKeyForCaesarCipher() As Integer
-        Dim Key As Integer
-        Console.Write("Enter the amount that shifts the plaintext alphabet to the ciphertext alphabet: ")
-        Key = Console.ReadLine
-        GetKeyForCaesarCipher = Key
+        Dim Key As String
+        Do
+            Console.Write("Enter the amount that shifts the plaintext alphabet to the ciphertext alphabet: ")
+            Key = Console.ReadLine
+        Loop Until IsNumeric(Key)
+        If Key >= 1 And Key <= 25 Then
+            Return Key
+        End If
+        Console.Write("Your input must be between 1 and 25 ")
+        Return GetKeyForCaesarCipher()
     End Function
 
     Function GetTypeOfCharacter(ByVal ASCIICode As Integer) As String
