@@ -33,6 +33,7 @@ Module Module1
                     AmountToShift = GetKeyForCaesarCipher()
                     Ciphertext = UseCaesarCipher(Plaintext, AmountToShift)
                     DisplayCiphertext(Ciphertext)
+                    WriteCiphertext(Ciphertext)
                 Case "h"
                     DisplayPlaintext(Plaintext)
                     SizeOfRailFence = GetSizeOfRailFence()
@@ -272,5 +273,11 @@ Module Module1
         Console.WriteLine()
         Console.Write("The ciphertext is: ")
         Console.WriteLine(TextToDisplay)
+    End Sub
+
+    Sub WriteCiphertext(ByRef cipher As String)
+        Dim objWriter As New System.IO.StreamWriter("cipher.txt")
+        objWriter.Write(cipher)
+        objWriter.Close()
     End Sub
 End Module
