@@ -1,4 +1,5 @@
-﻿'Skeleton Program code for the AQA COMP1 Summer 2013 examination
+﻿Imports System.IO
+'Skeleton Program code for the AQA COMP1 Summer 2013 examination
 'this code should be used in conjunction with the Preliminary Material
 'written by the AQA COMP1 Programmer Team
 'developed in the Visual Studio 2008 (Console Mode) programming environment (VB.NET)
@@ -40,9 +41,26 @@ Module Module1
                     Ciphertext = EncryptUsingRailFence(Plaintext, SizeOfRailFence)
                     DisplayCiphertext(Ciphertext)
                 Case "j"
+                    If System.IO.File.Exists("cipher.txt") Then
+                        Console.WriteLine("Do you want to use the ciper from the file? (y/n)")
+                        If Console.ReadLine = "y" Then
+                            Dim data As String = ""
+                            Using reader As StreamReader = New StreamReader("cipher.txt")
+                                Dim line As String = reader.ReadLine()
+                                Do Until line Is Nothing
+                                    data += line + vbCrLf
+                                    line = reader.ReadLine()
+                                Loop
+                            End Using
+                            DisplayCiphertext(data)
+                            AmountToShift = -GetKeyForCaesarCipher()
+                            Plaintext = UseCaesarCipher(data, AmountToShift)
+                            DisplayPlaintext(Plaintext)
+                            Exit Select
+                        End If
+                    End If
                     DisplayCiphertext(Ciphertext)
                     AmountToShift = -GetKeyForCaesarCipher()
-                    Plaintext = UseCaesarCipher(Ciphertext, AmountToShift)
                     DisplayPlaintext(Plaintext)
                 Case "k"
                     DisplayCiphertext(Ciphertext)
@@ -276,7 +294,7 @@ Module Module1
     End Sub
 
     Sub WriteCiphertext(ByRef cipher As String)
-        Dim objWriter As New System.IO.StreamWriter("cipher.txt")
+        Dim objWriter As New StreamWriter("cipher.txt")
         objWriter.Write(cipher)
         objWriter.Close()
     End Sub
