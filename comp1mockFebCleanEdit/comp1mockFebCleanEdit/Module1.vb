@@ -67,6 +67,12 @@ Module Module1
                     SizeOfRailFence = GetSizeOfRailFence()
                     Plaintext = DecryptUsingRailFence(Ciphertext, SizeOfRailFence)
                     DisplayPlaintext(Plaintext)
+                Case "m"
+                    GetPositionsToUse(StartPosition, EndPosition)
+                    N = GetValueForN()
+                    Console.WriteLine("Type your message to hide")
+                    Dim text As String = Console.ReadLine()
+                    writeNthCharacterSteganography(StartPosition, EndPosition, N, text)
                 Case "n"
                     GetPositionsToUse(StartPosition, EndPosition)
                     N = GetValueForN()
@@ -96,6 +102,7 @@ Module Module1
         Console.WriteLine("  k.  Rail fence")
         Console.WriteLine("STEGANOGRAPHY")
         Console.WriteLine("  n.  nth character (text from file)")
+        Console.WriteLine("  m.  nth character (write text to file)")
         Console.WriteLine()
         Console.Write("Please select an option from the above list (or enter q to quit): ")
     End Sub
@@ -279,6 +286,34 @@ Module Module1
             CurrentPosition = CurrentPosition + N
         End While
         EveryNthCharacterSteganography = HiddenMessage
+    End Function
+
+    Sub writeNthCharacterSteganography(ByVal StartPosition As Integer, ByVal EndPosition As Integer, ByVal N As Integer, ByVal text As String)
+        Dim data As String = ""
+        Dim i As Integer = 0
+        For start As Integer = 0 To StartPosition - 1
+            data += getRandomChar()
+        Next
+        For position As Integer = StartPosition To EndPosition
+            Dim charS As Char = Nothing
+            If position Mod (N) = 0 Then
+                charS = text(i)
+                i += 1
+            Else
+                charS = getRandomChar()
+            End If
+            data += charS
+        Next
+        Dim objWriter As New StreamWriter("steg.txt")
+        objWriter.Write(data)
+        objWriter.Close()
+    End Sub
+
+    Function getRandomChar() As Char
+        Dim validchars As String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        Dim rand As New Random()
+        Dim idx As Integer = rand.Next(0, validchars.Length)
+        Return validchars(idx)
     End Function
 
     Sub DisplayPlaintext(ByVal TextToDisplay As String)
