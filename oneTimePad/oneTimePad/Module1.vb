@@ -26,13 +26,13 @@ Module Module1
         Console.Write("Enter New Message: ")
         Plaintext = Console.ReadLine.ToUpper
         Do
-            Console.Write("Enter New Key: ")
+            Console.Write("    Enter New Key: ")
             OneTimePad = Console.ReadLine.ToUpper
             If Len(OneTimePad) < Len(Plaintext) Then Console.WriteLine("Key is not long enough!")
         Loop Until Len(OneTimePad) >= Len(Plaintext)
         Ciphertext = ""
         For counter = 0 To Len(Plaintext) - 1
-            Ciphertext = Ciphertext + Chr((((Asc(Plaintext(counter)) - 64) + (Asc(OneTimePad(counter)) - 64)) Mod 26) + 64)
+            Ciphertext = Ciphertext + Chr((((Asc(Plaintext(counter)) - 64) + (Asc(OneTimePad(counter)) - 64))) + 64)
         Next
         Console.Write(Ciphertext)
         FileOpen(1, "Message.txt", OpenMode.Output)
