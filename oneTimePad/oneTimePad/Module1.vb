@@ -23,6 +23,7 @@ Module Module1
     End Sub
 
     Sub EncryptMessage()
+        Console.Clear()
         Console.Write("Enter New Message: ")
         Plaintext = Console.ReadLine.ToUpper
         Do
