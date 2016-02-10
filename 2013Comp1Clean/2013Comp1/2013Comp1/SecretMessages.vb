@@ -39,6 +39,17 @@ Module SecretMessages
                     SizeOfRailFence = GetSizeOfRailFence()
                     Ciphertext = EncryptUsingRailFence(Plaintext, SizeOfRailFence)
                     DisplayCiphertext(Ciphertext)
+                Case "i"
+                    FileOpen(1, "CaesarEncrypted.txt", OpenMode.Output)
+                    Dim Answer As String = ""
+                    Do
+                        Dim text As String = GetTextFromUser()
+                        Dim key As Integer = GetKeyForCaesarCipher()
+                        PrintLine(1, UseCaesarCipher(text, key))
+                        Console.WriteLine("Do you want to enter more text? (Y/N)")
+                        Answer = Console.ReadLine()
+                    Loop While Answer.ToUpper = "Y"
+                    FileClose(1)
                 Case "j"
                     DisplayCiphertext(Ciphertext)
                     AmountToShift = -GetKeyForCaesarCipher()
@@ -53,6 +64,16 @@ Module SecretMessages
                     GetPositionsToUse(StartPosition, EndPosition)
                     N = GetValueForN()
                     Plaintext = EveryNthCharacterSteganography(StartPosition, EndPosition, N)
+                    DisplayPlaintext(Plaintext)
+                Case "o"
+                    Plaintext = ""
+                    GetPositionsToUse(StartPosition, EndPosition)
+                    Dim nth As Integer = 2
+                    While StartPosition <= EndPosition
+                        Plaintext += GetTextFromFile(StartPosition, EndPosition)
+                        StartPosition += GetNthFibonacciNumber(nth)
+                        nth += 1
+                    End While
                     DisplayPlaintext(Plaintext)
             End Select
             If Choice <> "q" Then
@@ -73,11 +94,14 @@ Module SecretMessages
         Console.WriteLine("ENCRYPT")
         Console.WriteLine("  g.  Caesar cipher")
         Console.WriteLine("  h.  Rail fence")
+        Console.WriteLine("WRITE TO FILE")
+        Console.WriteLine("  i.  Caesar cipher")
         Console.WriteLine("DECRYPT")
         Console.WriteLine("  j.  Caesar cipher")
         Console.WriteLine("  k.  Rail fence")
         Console.WriteLine("STEGANOGRAPHY")
         Console.WriteLine("  n.  nth character (text from file)")
+        Console.WriteLine("  o.  Fibonacci sequence (text from file)")
         Console.WriteLine()
         Console.Write("Please select an option from the above list (or enter q to quit): ")
     End Sub
@@ -121,10 +145,16 @@ Module SecretMessages
     End Function
 
     Function GetKeyForCaesarCipher() As Integer
-        Dim Key As Integer
+        Dim Key As String
         Console.Write("Enter the amount that shifts the plaintext alphabet to the ciphertext alphabet: ")
         Key = Console.ReadLine
-        GetKeyForCaesarCipher = Key
+        If IsNumeric(Key) Then
+            If Key > 0 And Key < 26 Then
+                Return Key
+            End If
+        End If
+        Console.WriteLine("Invalid key - a defult value has been used instead")
+        Return 1
     End Function
 
     Function GetTypeOfCharacter(ByVal ASCIICode As Integer) As String
@@ -268,4 +298,13 @@ Module SecretMessages
         Console.Write("The ciphertext is: ")
         Console.WriteLine(TextToDisplay)
     End Sub
+    Function GetNthFibonacciNumber(ByVal term As Integer)
+        Dim l2 As Integer = 1, l1 As Integer = 0, l0 As Integer = 0
+        For current As Integer = 1 To term
+            l0 = l1 + l2
+            l2 = l1
+            l1 = l0
+        Next
+        Return l0
+    End Function
 End Module
