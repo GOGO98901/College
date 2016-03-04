@@ -210,6 +210,8 @@ Module Module1
     End Sub
 
     Sub Main()
+        Console.Title = "Battleship"
+
         Dim Board(9, 9) As Char
         Dim Ships(4) As TShip
         Dim MenuOption As Integer
@@ -218,6 +220,7 @@ Module Module1
             SetUpShips(Ships)
             DisplayMenu()
             MenuOption = GetMainMenuChoice()
+            Console.Clear()
             If MenuOption = 1 Then
                 PlaceRandomShips(Board, Ships)
                 PlayGame(Board, Ships)
