@@ -70,7 +70,7 @@ Module SecretMessages
                     GetPositionsToUse(StartPosition, EndPosition)
                     Dim nth As Integer = 2
                     While StartPosition <= EndPosition
-                        Plaintext += GetTextFromFile(StartPosition, EndPosition)
+                        Plaintext += GetTextFromFile(StartPosition, StartPosition)
                         StartPosition += GetNthFibonacciNumber(nth)
                         nth += 1
                     End While
