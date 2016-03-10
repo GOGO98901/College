@@ -56,9 +56,24 @@ Module Module1
             Board(Row, Column) = "m"
         Else
             Console.WriteLine("Hit at (" & Column & "," & Row & ").")
+            Dim ship As Char = Board(Row, Column)
             Board(Row, Column) = "h"
+            If Not doesShipExist(Board, ship) Then
+                Console.WriteLine("[Computer] You sunk my ship!")
+            End If
         End If
     End Sub
+
+    Function doesShipExist(ByRef Board(,) As Char, ship As Char)
+        Dim Row As Integer
+        Dim Column As Integer
+        For Row = 0 To 9
+            For Column = 0 To 9
+                If Board(Row, Column) == ship Then Return true
+            Next
+        Next
+        Return False
+    End Function
 
     Sub SetUpBoard(ByRef Board(,) As Char)
         Dim Row As Integer
@@ -104,7 +119,7 @@ Module Module1
                 End If
                 Valid = ValidateBoatPosition(Board, Ship, Row, Column, Orientation)
             End While
-            Console.WriteLine("Computer placing the " & Ship.Name)
+            Console.WriteLine("[Computer] Placing the " & Ship.Name & " on the board")
             PlaceShip(Board, Ship, Row, Column, Orientation)
         Next
     End Sub
