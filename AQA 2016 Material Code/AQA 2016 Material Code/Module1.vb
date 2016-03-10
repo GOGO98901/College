@@ -10,6 +10,8 @@ Imports System.IO
 Module Module1
     Const TrainingGame As String = "Training.txt"
 
+    Const ShowShips As Boolean = True
+
     Structure TShip
         Dim Name As String
         Dim Size As Integer
@@ -89,6 +91,7 @@ Module Module1
         Dim Orientation As Char
         Dim HorV As Integer
         For Each Ship In Ships
+            Randomize()
             Valid = False
             While Not Valid
                 Row = Int(Rnd() * 10)
@@ -173,7 +176,11 @@ Module Module1
                 If Board(Row, Column) = "-" Then
                     Console.Write(" ")
                 ElseIf Board(Row, Column) = "A" Or Board(Row, Column) = "B" Or Board(Row, Column) = "S" Or Board(Row, Column) = "D" Or Board(Row, Column) = "P" Or Board(Row, Column) = "F" Or Board(Row, Column) = "R" Then
-                    Console.Write(" ")
+                    If ShowShips Then
+                        Console.Write(Board(Row, Column))
+                    Else
+                        Console.Write(" ")
+                    End If
                 Else
                     Console.Write(Board(Row, Column))
                 End If
