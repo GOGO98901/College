@@ -17,12 +17,31 @@ Module Module1
 
     Sub GetRowColumn(ByRef Row As Integer, ByRef Column As Integer)
         Console.WriteLine()
-        Console.Write("Please enter column: ")
-        Column = Console.ReadLine()
-        Console.Write("Please enter row: ")
-        Row = Console.ReadLine()
+        Column = GetValueBetween(0, 9, "Please enter column")
+        Row = GetValueBetween(0, 9, "Please enter row")
         Console.WriteLine()
     End Sub
+
+    Function GetValueBetween(par1 As Integer, par2 As Integer, message As String)
+        Dim input As Integer = GetNumericInput(message)
+        If input >= par1 And input <= par2 Then Return input
+        Do
+            Console.WriteLine("You must enter a value between " & par1 & " and " & par2)
+            input = GetNumericInput(message)
+        Loop Until input >= par1 And input <= par2
+        Return input
+    End Function
+
+    Function GetNumericInput(message As String) As Integer
+        Console.WriteLine(message)
+        Console.Write("> ")
+        Dim input As Object = Console.ReadLine()
+        If IsNumeric(input) Then
+            Return input
+        End If
+        Console.WriteLine("Enter a numerical value only")
+        Return GetNumericInput(message)
+    End Function
 
     Sub MakePlayerMove(ByRef Board(,) As Char, ByRef Ships() As TShip)
         Dim Row As Integer
@@ -129,7 +148,7 @@ Module Module1
         Dim Column As Integer
         For Row = 0 To 9
             For Column = 0 To 9
-                If Board(Row, Column) = "A" Or Board(Row, Column) = "B" Or Board(Row, Column) = "S" Or Board(Row, Column) = "D" Or Board(Row, Column) = "P" Then
+                If Board(Row, Column) = "A" Or Board(Row, Column) = "B" Or Board(Row, Column) = "S" Or Board(Row, Column) = "D" Or Board(Row, Column) = "P" Or Board(Row, Column) = "F" Or Board(Row, Column) = "R" Then
                     Return False
                 End If
             Next
@@ -153,7 +172,7 @@ Module Module1
             For Column = 0 To 9
                 If Board(Row, Column) = "-" Then
                     Console.Write(" ")
-                ElseIf Board(Row, Column) = "A" Or Board(Row, Column) = "B" Or Board(Row, Column) = "S" Or Board(Row, Column) = "D" Or Board(Row, Column) = "P" Then
+                ElseIf Board(Row, Column) = "A" Or Board(Row, Column) = "B" Or Board(Row, Column) = "S" Or Board(Row, Column) = "D" Or Board(Row, Column) = "P" Or Board(Row, Column) = "F" Or Board(Row, Column) = "R" Then
                     Console.Write(" ")
                 Else
                     Console.Write(Board(Row, Column))
@@ -193,6 +212,9 @@ Module Module1
                 Console.WriteLine("All ships sunk!")
                 Console.WriteLine()
             End If
+            Console.WriteLine("Press enter to continue")
+            Console.ReadLine()
+            Console.Clear()
         Loop Until GameWon
     End Sub
 
@@ -207,13 +229,17 @@ Module Module1
         Ships(3).Size = 3
         Ships(4).Name = "Patrol Boat"
         Ships(4).Size = 2
+        Ships(5).Name = "Rowing Boat"
+        Ships(5).Size = 1
+        Ships(6).Name = "Frigate"
+        Ships(6).Size = 3
     End Sub
 
     Sub Main()
         Console.Title = "Battleship"
 
         Dim Board(9, 9) As Char
-        Dim Ships(4) As TShip
+        Dim Ships(6) As TShip
         Dim MenuOption As Integer
         Do
             SetUpBoard(Board)
