@@ -59,7 +59,7 @@ Module Module1
             Dim ship As Char = Board(Row, Column)
             Board(Row, Column) = "h"
             If Not doesShipExist(Board, ship) Then
-                Console.WriteLine("[Computer] You sunk my ship!")
+                Console.WriteLine("[Computer] You sunk my " & getShipFromChar(Ships, ship).Name & "!")
             End If
         End If
     End Sub
@@ -69,7 +69,7 @@ Module Module1
         Dim Column As Integer
         For Row = 0 To 9
             For Column = 0 To 9
-                If Board(Row, Column) == ship Then Return true
+                If Board(Row, Column) = ship Then Return True
             Next
         Next
         Return False
@@ -161,12 +161,12 @@ Module Module1
         Return True
     End Function
 
-    Function CheckWin(ByVal Board(,) As Char)
+    Function CheckWin(ByVal Ships() As TShip, ByVal Board(,) As Char)
         Dim Row As Integer
         Dim Column As Integer
         For Row = 0 To 9
             For Column = 0 To 9
-                If Board(Row, Column) = "A" Or Board(Row, Column) = "B" Or Board(Row, Column) = "S" Or Board(Row, Column) = "D" Or Board(Row, Column) = "P" Or Board(Row, Column) = "F" Or Board(Row, Column) = "R" Then
+                If isShip(Ships, Board(Row, Column)) Then
                     Return False
                 End If
             Next
@@ -174,7 +174,15 @@ Module Module1
         Return True
     End Function
 
-    Sub PrintBoard(ByVal Board(,) As Char)
+    Function isShip(ByVal Ships() As TShip, place As Char) As Boolean
+        For Each ship In Ships
+            If place = ship.Name(0) Then Return True
+        Next
+        Return False
+    End Function
+
+
+    Sub PrintBoard(ByVal Board(,) As Char, ByVal Ships() As TShip)
         Dim Row As Integer
         Dim Column As Integer
         Console.WriteLine()
@@ -190,7 +198,7 @@ Module Module1
             For Column = 0 To 9
                 If Board(Row, Column) = "-" Then
                     Console.Write(" ")
-                ElseIf Board(Row, Column) = "A" Or Board(Row, Column) = "B" Or Board(Row, Column) = "S" Or Board(Row, Column) = "D" Or Board(Row, Column) = "P" Or Board(Row, Column) = "F" Or Board(Row, Column) = "R" Then
+                ElseIf isShip(Ships, Board(Row, Column)) Then
                     If ShowShips Then
                         Console.Write(Board(Row, Column))
                     Else
@@ -227,9 +235,9 @@ Module Module1
     Sub PlayGame(ByVal Board(,) As Char, ByVal Ships() As TShip)
         Dim GameWon As Boolean = False
         Do
-            PrintBoard(Board)
+            PrintBoard(Board, Ships)
             MakePlayerMove(Board, Ships)
-            GameWon = CheckWin(Board)
+            GameWon = CheckWin(Ships, Board)
             If GameWon Then
                 Console.WriteLine("All ships sunk!")
                 Console.WriteLine()
@@ -256,6 +264,13 @@ Module Module1
         Ships(6).Name = "Frigate"
         Ships(6).Size = 3
     End Sub
+
+    Function getShipFromChar(ByVal Ships() As TShip, ByVal name As Char) As TShip
+        For Each Ship In Ships
+            If Ship.Name.StartsWith(name) Then Return Ship
+        Next
+        Return Nothing
+    End Function
 
     Sub Main()
         Console.Title = "Battleship"
