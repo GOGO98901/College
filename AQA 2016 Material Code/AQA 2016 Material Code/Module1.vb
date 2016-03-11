@@ -48,20 +48,25 @@ Module Module1
     Sub MakePlayerMove(ByRef Board(,) As Char, ByRef Ships() As TShip)
         Dim Row As Integer
         Dim Column As Integer
+        Dim message As String = ""
         GetRowColumn(Row, Column)
         If Board(Row, Column) = "m" Or Board(Row, Column) = "h" Then
-            Console.WriteLine("Sorry, you have already shot at the square (" & Column & "," & Row & "). Please try again.")
+            message = "Sorry, you have already shot at the square (" & Column & "," & Row & "). Please try again."
         ElseIf Board(Row, Column) = "-" Then
-            Console.WriteLine("Sorry, (" & Column & "," & Row & ") is a miss.")
+            message = "Sorry, (" & Column & "," & Row & ") is a miss."
             Board(Row, Column) = "m"
         Else
-            Console.WriteLine("Hit at (" & Column & "," & Row & ").")
+            message = "Hit at (" & Column & "," & Row & ")."
             Dim ship As Char = Board(Row, Column)
             Board(Row, Column) = "h"
             If Not doesShipExist(Board, ship) Then
-                Console.WriteLine("[Computer] You sunk my " & getShipFromChar(Ships, ship).Name & "!")
+                message = "[Computer] You sunk my " & getShipFromChar(Ships, ship).Name & "!"
             End If
         End If
+        Console.Clear()
+        PrintBoard(Board, Ships)
+        Console.WriteLine()
+        Console.WriteLine(message)
     End Sub
 
     Function doesShipExist(ByRef Board(,) As Char, ship As Char)
