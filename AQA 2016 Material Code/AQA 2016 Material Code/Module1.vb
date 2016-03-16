@@ -20,6 +20,7 @@ Module Module1
     Sub GetRowColumn(ByRef Row As Integer, ByRef Column As Integer)
         Console.WriteLine()
         Column = GetValueBetween(0, 9, "Please enter column")
+        If Column = -1 Then Return
         Row = GetValueBetween(0, 9, "Please enter row")
         Console.WriteLine()
     End Sub
@@ -30,7 +31,7 @@ Module Module1
         Do
             Console.WriteLine("You must enter a value between " & par1 & " and " & par2)
             input = GetNumericInput(message)
-        Loop Until input >= par1 And input <= par2
+        Loop Until input >= par1 And input <= par2 Or input = -1
         Return input
     End Function
 
@@ -45,11 +46,29 @@ Module Module1
         Return GetNumericInput(message)
     End Function
 
-    Sub MakePlayerMove(ByRef Board(,) As Char, ByRef Ships() As TShip)
+    Function MakePlayerMove(ByRef Board(,) As Char, ByRef Ships() As TShip) As Boolean
         Dim Row As Integer
         Dim Column As Integer
         Dim message As String = ""
         GetRowColumn(Row, Column)
+        If Column = -1 Or Row = -1 Then
+            Console.WriteLine("Do you want to save before going back to main menu? (Y/N)")
+            Console.Write("> ")
+            Dim input = Console.ReadLine().ToUpper
+            If input = "Y" Then
+                Using FileWriter As StreamWriter = New StreamWriter("customGame.txt")
+                    For Row = 0 To 9
+                        Dim line As String = ""
+                        For Column = 0 To 9
+                            line += Board(Row, Column)
+                        Next
+                        FileWriter.WriteLine(line)
+                    Next
+                End Using
+                Console.WriteLine("File saved!")
+            End If
+            Return True
+        End If
         If Board(Row, Column) = "m" Or Board(Row, Column) = "h" Then
             message = "Sorry, you have already shot at the square (" & Column & "," & Row & "). Please try again."
         ElseIf Board(Row, Column) = "-" Then
@@ -67,7 +86,8 @@ Module Module1
         PrintBoard(Board, Ships)
         Console.WriteLine()
         Console.WriteLine(message)
-    End Sub
+        Return False
+    End Function
 
     Function doesShipExist(ByRef Board(,) As Char, ship As Char)
         Dim Row As Integer
@@ -239,18 +259,19 @@ Module Module1
 
     Sub PlayGame(ByVal Board(,) As Char, ByVal Ships() As TShip)
         Dim GameWon As Boolean = False
+        Dim GameQuit As Boolean = False
         Do
             PrintBoard(Board, Ships)
-            MakePlayerMove(Board, Ships)
+            GameQuit = MakePlayerMove(Board, Ships)
             GameWon = CheckWin(Ships, Board)
             If GameWon Then
                 Console.WriteLine("All ships sunk!")
                 Console.WriteLine()
             End If
-            Console.WriteLine("Press enter to continue")
-            Console.ReadLine()
-            Console.Clear()
-        Loop Until GameWon
+                Console.WriteLine("Press enter to continue")
+                Console.ReadLine()
+                Console.Clear()
+        Loop Until GameWon Or GameQuit
     End Sub
 
     Sub SetUpShips(ByRef Ships() As TShip)
