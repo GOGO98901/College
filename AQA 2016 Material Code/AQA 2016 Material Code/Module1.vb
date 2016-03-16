@@ -57,16 +57,7 @@ Module Module1
             Console.Write("> ")
             Dim input = Console.ReadLine().ToUpper
             If input = "Y" Then
-                Using FileWriter As StreamWriter = New StreamWriter(CustomGame)
-                    For Row = 0 To 9
-                        Dim line As String = ""
-                        For Column = 0 To 9
-                            line += Board(Row, Column)
-                        Next
-                        FileWriter.WriteLine(line)
-                    Next
-                End Using
-                Console.WriteLine("File saved!")
+                SaveGame(CustomGame, Board)
             End If
             Return True
         End If
@@ -109,6 +100,19 @@ Module Module1
                 Board(Row, Column) = "-"
             Next
         Next
+    End Sub
+
+    Sub SaveGame(ByVal Filename As String, ByRef Board(,) As Char)
+        Using FileWriter As StreamWriter = New StreamWriter(Filename)
+            For Row = 0 To 9
+                Dim line As String = ""
+                For Column = 0 To 9
+                    line += Board(Row, Column)
+                Next
+                FileWriter.WriteLine(line)
+            Next
+        End Using
+        Console.WriteLine("File saved!")
     End Sub
 
     Sub LoadGame(ByVal Filename As String, ByRef Board(,) As Char)
@@ -316,7 +320,7 @@ Module Module1
                 PlaceRandomShips(Board, Ships)
                 PlayGame(Board, Ships)
             ElseIf MenuOption = 2 Then
-                LoadGame(CustomGame, Board)
+                LoadGame(TrainingGame, Board)
                 PlayGame(Board, Ships)
             ElseIf MenuOption = 3 Then
                 If Not File.Exists(CustomGame) Then
@@ -325,7 +329,7 @@ Module Module1
                     Console.ReadLine()
                     Console.Clear()
                 Else
-                    LoadGame(TrainingGame, Board)
+                    LoadGame(CustomGame, Board)
                     PlayGame(Board, Ships)
                 End If
             End If
