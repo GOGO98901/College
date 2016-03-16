@@ -9,6 +9,7 @@ Imports System.IO
 
 Module Module1
     Const TrainingGame As String = "Training.txt"
+    Const CustomGame As String = "customGame.txt"
 
     Const ShowShips As Boolean = True
 
@@ -27,11 +28,11 @@ Module Module1
 
     Function GetValueBetween(par1 As Integer, par2 As Integer, message As String)
         Dim input As Integer = GetNumericInput(message)
-        If input >= par1 And input <= par2 Then Return input
+        If input = -1 Or input >= par1 And input <= par2 Then Return input
         Do
             Console.WriteLine("You must enter a value between " & par1 & " and " & par2)
             input = GetNumericInput(message)
-        Loop Until input >= par1 And input <= par2 Or input = -1
+        Loop Until input = -1 Or input >= par1 And input <= par2
         Return input
     End Function
 
@@ -56,7 +57,7 @@ Module Module1
             Console.Write("> ")
             Dim input = Console.ReadLine().ToUpper
             If input = "Y" Then
-                Using FileWriter As StreamWriter = New StreamWriter("customGame.txt")
+                Using FileWriter As StreamWriter = New StreamWriter(CustomGame)
                     For Row = 0 To 9
                         Dim line As String = ""
                         For Column = 0 To 9
@@ -245,6 +246,7 @@ Module Module1
         Console.WriteLine()
         Console.WriteLine("1. Start new game")
         Console.WriteLine("2. Load training game")
+        Console.WriteLine("3. Load saved game")
         Console.WriteLine("9. Quit")
         Console.WriteLine()
     End Sub
@@ -314,8 +316,18 @@ Module Module1
                 PlaceRandomShips(Board, Ships)
                 PlayGame(Board, Ships)
             ElseIf MenuOption = 2 Then
-                LoadGame(TrainingGame, Board)
+                LoadGame(CustomGame, Board)
                 PlayGame(Board, Ships)
+            ElseIf MenuOption = 3 Then
+                If Not File.Exists(CustomGame) Then
+                    Console.WriteLine("There is no saved game")
+                    Console.WriteLine("Press enter to continue")
+                    Console.ReadLine()
+                    Console.Clear()
+                Else
+                    LoadGame(TrainingGame, Board)
+                    PlayGame(Board, Ships)
+                End If
             End If
         Loop Until MenuOption = 9
     End Sub
