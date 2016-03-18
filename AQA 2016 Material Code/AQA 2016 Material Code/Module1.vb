@@ -65,11 +65,8 @@ Module Module1
             Board(Row, Column) = "m"
         Else
             message = "Hit at (" & Column & "," & Row & ")."
-            Dim ship As Char = Board(Row, Column)
+            If Not doesShipExist(Board, Board(Row, Column)) Then message = "[Computer] You sunk my " & getShipFromChar(Ships, Board(Row, Column)).Name & "!"
             Board(Row, Column) = "h"
-            If Not doesShipExist(Board, ship) Then
-                message = "[Computer] You sunk my " & getShipFromChar(Ships, ship).Name & "!"
-            End If
         End If
         Console.Clear()
         PrintBoard(Board, Ships)
@@ -365,7 +362,7 @@ Module Module1
     End Function
 
     Sub Main()
-        Console.Title = "Battleship"
+        Console.Title = "Battleship AQA Material"
 
         Dim Board(9, 9) As Char
         Dim Ships(6) As TShip
@@ -374,6 +371,7 @@ Module Module1
         Do
             SetUpBoard(Board)
             SetUpShips(Ships)
+            GoesLeft = 0
             DisplayMenu()
             MenuOption = GetMainMenuChoice()
             Console.Clear()
