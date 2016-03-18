@@ -11,7 +11,7 @@ Module Module1
     Const TrainingGame As String = "Training.txt"
     Const CustomGame As String = "customGame.txt"
 
-    Const ShowShips As Boolean = True
+    Dim ShowShips As Boolean = True
 
     Structure TShip
         Dim Name As String
@@ -251,6 +251,7 @@ Module Module1
         Console.WriteLine("1. Start new game")
         Console.WriteLine("2. Load training game")
         Console.WriteLine("3. Load saved game")
+        Console.WriteLine("8. Show ships " & ShowShips)
         Console.WriteLine("9. Quit")
         Console.WriteLine()
     End Sub
@@ -331,7 +332,10 @@ Module Module1
                 Else
                     LoadGame(CustomGame, Board)
                     PlayGame(Board, Ships)
+
                 End If
+            ElseIf MenuOption = 8 Then
+                ShowShips = Not ShowShips
             End If
         Loop Until MenuOption = 9
     End Sub
