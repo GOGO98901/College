@@ -59,6 +59,7 @@ Module Module1
         If Column = -1 Or Row = -1 Then Return True
         If Board(Row, Column) = "m" Or Board(Row, Column) = "h" Then
             message = "Sorry, you have already shot at the square (" & Column & "," & Row & "). Please try again."
+            Return MakePlayerMove(Board, Ships)
         ElseIf Board(Row, Column) = "-" Then
             message = "Sorry, (" & Column & "," & Row & ") is a miss."
             Board(Row, Column) = "m"
@@ -304,6 +305,8 @@ Module Module1
         Console.Clear()
         Do
             PrintBoard(Board, Ships)
+            Console.WriteLine()
+            Console.WriteLine("Type -1 to exit to main menu")
             Console.WriteLine()
             Console.WriteLine("You have " & GoesLeft & " goes left")
             GameQuit = MakePlayerMove(Board, Ships)
