@@ -11,6 +11,10 @@ Module Module1
     Const TrainingGame As String = "Training.txt"
     Const CustomGame As String = "customGame.txt"
 
+    Const GameEasy As Integer = 45
+    Const GameMedium As Integer = 35
+    Const GameHard As Integer = 25
+
     Dim ShowShips As Boolean = True
 
     Structure TShip
@@ -52,15 +56,7 @@ Module Module1
         Dim Column As Integer
         Dim message As String = ""
         GetRowColumn(Row, Column)
-        If Column = -1 Or Row = -1 Then
-            Console.WriteLine("Do you want to save before going back to main menu? (Y/N)")
-            Console.Write("> ")
-            Dim input = Console.ReadLine().ToUpper
-            If input = "Y" Then
-                SaveGame(CustomGame, Board)
-            End If
-            Return True
-        End If
+        If Column = -1 Or Row = -1 Then Return True
         If Board(Row, Column) = "m" Or Board(Row, Column) = "h" Then
             message = "Sorry, you have already shot at the square (" & Column & "," & Row & "). Please try again."
         ElseIf Board(Row, Column) = "-" Then
@@ -102,7 +98,7 @@ Module Module1
         Next
     End Sub
 
-    Sub SaveGame(ByVal Filename As String, ByRef Board(,) As Char)
+    Sub SaveGame(ByVal Filename As String, ByVal Board(,) As Char, ByVal goesLeft As Integer)
         Using FileWriter As StreamWriter = New StreamWriter(Filename)
             For Row = 0 To 9
                 Dim line As String = ""
@@ -111,11 +107,12 @@ Module Module1
                 Next
                 FileWriter.WriteLine(line)
             Next
+            FileWriter.WriteLine(goesLeft)
         End Using
         Console.WriteLine("File saved!")
     End Sub
 
-    Sub LoadGame(ByVal Filename As String, ByRef Board(,) As Char)
+    Sub LoadGame(ByVal Filename As String, ByRef Board(,) As Char, ByRef goesLeft As Integer)
         Dim Row As Integer
         Dim Column As Integer
         Dim Line As String
@@ -126,6 +123,11 @@ Module Module1
                     Board(Row, Column) = Line(Column)
                 Next
             Next
+            If Not FileReader.EndOfStream Then
+                goesLeft = FileReader.ReadLine()
+            Else
+                goesLeft = 0
+            End If
         End Using
     End Sub
 
@@ -246,39 +248,93 @@ Module Module1
     End Sub
 
     Sub DisplayMenu()
+        Console.Clear()
         Console.WriteLine("MAIN MENU")
         Console.WriteLine()
         Console.WriteLine("1. Start new game")
         Console.WriteLine("2. Load training game")
         Console.WriteLine("3. Load saved game")
-        Console.WriteLine("8. Show ships " & ShowShips)
+        Console.WriteLine("8. Show ships [" & ShowShips.ToString.ToLower & "]")
         Console.WriteLine("9. Quit")
         Console.WriteLine()
     End Sub
 
+    Sub DisplayGameMode()
+        Console.Clear()
+        Console.WriteLine("GAME MODE")
+        Console.WriteLine()
+        Console.WriteLine("1. Casual (unlimited moves)")
+        Console.WriteLine("2. Easy (" & GameEasy & " moves)")
+        Console.WriteLine("3. Medium (" & GameMedium & " moves)")
+        Console.WriteLine("4. Hard (" & GameHard & " moves)")
+        Console.WriteLine("9. Exit (Main menu)")
+    End Sub
+
     Function GetMainMenuChoice()
-        Dim Choice As Integer
+        Dim Choice As String
         Console.Write("Please enter your choice: ")
         Choice = Console.ReadLine()
         Console.WriteLine()
-        Return Choice
+        If IsNumeric(Choice) Then Return Choice
+        Return 0
     End Function
 
-    Sub PlayGame(ByVal Board(,) As Char, ByVal Ships() As TShip)
+    Sub PlayGame(ByVal Board(,) As Char, ByVal Ships() As TShip, ByVal GoesLeft As Integer)
         Dim GameWon As Boolean = False
+        Dim Gamelost As Boolean = False
         Dim GameQuit As Boolean = False
+        If GoesLeft = 0 Then
+            Do
+                DisplayGameMode()
+                Dim modeOption As String = GetMainMenuChoice()
+                If modeOption = 1 Then
+                    GoesLeft = -1
+                ElseIf modeOption = 2 Then
+                    GoesLeft = GameEasy
+                ElseIf modeOption = 3 Then
+                    GoesLeft = GameMedium
+                ElseIf modeOption = 4 Then
+                    GoesLeft = GameHard
+                ElseIf modeOption = 9 Then
+                    GameQuit = True
+                    Return
+                End If
+            Loop While GoesLeft = 0
+        End If
+        Console.Clear()
         Do
             PrintBoard(Board, Ships)
+            Console.WriteLine()
+            Console.WriteLine("You have " & GoesLeft & " goes left")
             GameQuit = MakePlayerMove(Board, Ships)
-            GameWon = CheckWin(Ships, Board)
-            If GameWon Then
-                Console.WriteLine("All ships sunk!")
-                Console.WriteLine()
+            If Not GameQuit Then
+                If Not GoesLeft = -1 Then
+                    If GoesLeft = 0 Then
+                        Gamelost = True
+                    End If
+                    GoesLeft -= 1
+                End If
+
+                GameWon = CheckWin(Ships, Board)
+                If GameWon Then
+                    Console.WriteLine("All ships sunk!")
+                    Console.WriteLine()
+                ElseIf Gamelost Then
+                    Console.WriteLine("Ran out of moves!")
+                    Console.WriteLine()
+                End If
+            Else
+                Console.WriteLine("Do you want to save before going back to main menu? (Y/N)")
+                Console.Write("> ")
+                Dim input = Console.ReadLine().ToUpper
+                If input = "Y" Then
+                    SaveGame(CustomGame, Board, GoesLeft)
+                End If
             End If
-                Console.WriteLine("Press enter to continue")
-                Console.ReadLine()
-                Console.Clear()
-        Loop Until GameWon Or GameQuit
+            Console.WriteLine("Press enter to continue")
+            Console.ReadLine()
+            Console.Clear()
+        Loop Until GameWon Or Gamelost Or GameQuit
     End Sub
 
     Sub SetUpShips(ByRef Ships() As TShip)
@@ -311,6 +367,7 @@ Module Module1
         Dim Board(9, 9) As Char
         Dim Ships(6) As TShip
         Dim MenuOption As Integer
+        Dim GoesLeft As Integer
         Do
             SetUpBoard(Board)
             SetUpShips(Ships)
@@ -319,20 +376,18 @@ Module Module1
             Console.Clear()
             If MenuOption = 1 Then
                 PlaceRandomShips(Board, Ships)
-                PlayGame(Board, Ships)
+                PlayGame(Board, Ships, GoesLeft)
             ElseIf MenuOption = 2 Then
-                LoadGame(TrainingGame, Board)
-                PlayGame(Board, Ships)
+                LoadGame(TrainingGame, Board, GoesLeft)
+                PlayGame(Board, Ships, GoesLeft)
             ElseIf MenuOption = 3 Then
                 If Not File.Exists(CustomGame) Then
                     Console.WriteLine("There is no saved game")
                     Console.WriteLine("Press enter to continue")
                     Console.ReadLine()
-                    Console.Clear()
                 Else
-                    LoadGame(CustomGame, Board)
-                    PlayGame(Board, Ships)
-
+                    LoadGame(CustomGame, Board, GoesLeft)
+                    PlayGame(Board, Ships, GoesLeft)
                 End If
             ElseIf MenuOption = 8 Then
                 ShowShips = Not ShowShips
