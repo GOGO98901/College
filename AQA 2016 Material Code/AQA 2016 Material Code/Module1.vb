@@ -62,7 +62,17 @@ Module Module1
             Return MakePlayerMove(Board, Ships)
         ElseIf Board(Row, Column) = "-" Then
             message = "Sorry, (" & Column & "," & Row & ") is a miss."
-            Board(Row, Column) = "m"
+            Randomize()
+            Dim chance As Integer = Rnd() * 5
+            Dim c As Char = "m"
+            If chance = 0 Then
+                Dim d As Integer = GetDistanceToNearestShip(Ships, Board, Row, Column)
+                If Not d = -1 Then
+                    c = d.ToString
+                    message += " But the nearest ship is " & c & " places away."
+                End If
+            End If
+            Board(Row, Column) = c
         Else
             message = "Hit at (" & Column & "," & Row & ")."
             If Not doesShipExist(Board, Board(Row, Column)) Then message = "[Computer] You sunk my " & getShipFromChar(Ships, Board(Row, Column)).Name & "!"
@@ -245,6 +255,35 @@ Module Module1
         Next
     End Sub
 
+    Function GetDistanceToNearestShip(ByVal Ships() As TShip, ByVal Board(,) As Char, ByVal x As Integer, ByVal y As Integer) As Integer
+        Dim xS, yS, shell, sides As Integer
+        shell = 0
+        sides = 3
+        Dim scanning As Boolean = True
+        While scanning
+            shell += 1
+            If shell > 10 Then Return 0
+            If Not shell = 1 Then sides += 2
+            For xC As Integer = x - Math.Floor(sides / 2) To x + Math.Floor(sides / 2)
+                If xC < 0 Or xC >= 10 Then Continue For
+                For yC As Integer = y - Math.Floor(sides / 2) To y + Math.Floor(sides / 2)
+                    If yC < 0 Or yC >= 10 Then Continue For
+                    If (xC > x - Math.Floor(sides / 2) And xC < x + Math.Floor(sides / 2)) And (yC > y - Math.Floor(sides / 2) And yC < y + Math.Floor(sides / 2)) Then Continue For
+                    If xC = x And yC = y Then Continue For
+
+                    Dim cell As Char = Board(xC, yC)
+                    If isShip(Ships, cell) Then
+                        xS = xC
+                        yS = yC
+                        scanning = False
+                    End If
+                Next
+            Next
+        End While
+        If xS = 0 And yS = 0 Then Return 0
+        Return Math.Floor(Math.Sqrt(((x - xS) ^ 2) + ((y - yS) ^ 2)))
+    End Function
+
     Sub DisplayMenu()
         Console.Clear()
         Console.WriteLine("MAIN MENU")
@@ -305,7 +344,7 @@ Module Module1
             Console.WriteLine()
             Console.WriteLine("Type -1 to exit to main menu")
             Console.WriteLine()
-            Console.WriteLine("You have " & GoesLeft & " goes left")
+            If Not GoesLeft = -1 Then Console.WriteLine("You have " & GoesLeft & " goes left")
             GameQuit = MakePlayerMove(Board, Ships)
             If Not GameQuit Then
                 If Not GoesLeft = -1 Then
