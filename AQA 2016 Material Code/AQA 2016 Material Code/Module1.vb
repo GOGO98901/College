@@ -15,8 +15,10 @@ Module Module1
     Const GameMedium As Integer = 35
     Const GameHard As Integer = 25
 
-    Dim ShowShips As Boolean = True
+    Dim ShowShips As Boolean = False
     Dim sonar As Boolean = True
+
+    Const sonarChance As Integer = 5
 
     Structure TShip
         Dim Name As String
@@ -64,7 +66,7 @@ Module Module1
         ElseIf Board(Row, Column) = "-" Then
             message = "Sorry, (" & Column & "," & Row & ") is a miss."
             Randomize()
-            Dim chance As Integer = Rnd() * 5
+            Dim chance As Integer = Rnd() * sonarChance
             Dim c As Char = "m"
             If chance = 0 And sonar Then
                 Dim d As Integer = GetDistanceToNearestShip(Ships, Board, Row, Column)
@@ -292,7 +294,7 @@ Module Module1
         Console.WriteLine("1. Start new game")
         Console.WriteLine("2. Load training game")
         Console.WriteLine("3. Load saved game")
-        Console.WriteLine("7. Sonar rounds [" & sonar.ToString.ToLower & "]")
+        Console.WriteLine("7. Sonar rounds (1/" & sonarChance & " chance) [" & sonar.ToString.ToLower & "]")
         Console.WriteLine("8. Show ships [" & ShowShips.ToString.ToLower & "]")
         Console.WriteLine("9. Quit")
         Console.WriteLine()
