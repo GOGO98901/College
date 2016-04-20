@@ -17,10 +17,34 @@ Module Module1
 
     Sub GetRowColumn(ByRef Row As Integer, ByRef Column As Integer)
         Console.WriteLine()
-        Console.Write("Please enter column: ")
-        Column = Console.ReadLine()
-        Console.Write("Please enter row: ")
-        Row = Console.ReadLine()
+        Dim input As String = ""
+        Dim passed As Boolean = False
+        While Not passed
+            Console.Write("Please enter column: ")
+            input = Console.ReadLine()
+            If IsNumeric(input) Then
+                If input >= 0 And input <= 9 Then
+                    Column = input
+                    passed = True
+                End If
+            Else
+                Console.WriteLine("You must enter a number between 0 and 9")
+            End If
+        End While
+        passed = False
+        While Not passed
+            Console.Write("Please enter row: ")
+            Row = Console.ReadLine()
+            If IsNumeric(input) Then
+                If input >= 0 And input <= 9 Then
+                    Column = input
+                    passed = True
+                End If
+            Else
+                Console.WriteLine("You must enter a number between 0 and 9")
+            End If
+        End While
+        passed = False
         Console.WriteLine()
     End Sub
 
@@ -35,7 +59,25 @@ Module Module1
             Board(Row, Column) = "m"
         Else
             Console.WriteLine("Hit at (" & Column & "," & Row & ").")
+            Dim ship As Char = Board(Row, Column)
             Board(Row, Column) = "h"
+            Dim sunk As Boolean = True
+            For Row = 0 To 9
+                For Column = 0 To 9
+                    If Board(Row, Column) = ship Then
+                        sunk = True
+                    End If
+                Next
+            Next
+            If sunk Then
+                Dim ShipName As String = vbNullString
+                For Each shipList In Ships
+                    If shipList.Name(0) = ship Then
+                        ShipName = shipList.Name
+                    End If
+                Next
+                Console.WriteLine("you sunk my " & ShipName & "!")
+            End If
         End If
     End Sub
 
@@ -137,6 +179,23 @@ Module Module1
         Return True
     End Function
 
+    Function CalculateProbability(ByVal Board(,) As Char) As Double
+        Dim Row As Integer
+        Dim Column As Integer
+        Dim ShipsLeft As Integer = 0
+        Dim LocationsLeft As Integer = 0
+        For Row = 0 To 9
+            For Column = 0 To 9
+                If Board(Row, Column) = "A" Or Board(Row, Column) = "B" Or Board(Row, Column) = "S" Or Board(Row, Column) = "D" Or Board(Row, Column) = "P" Then
+                    ShipsLeft += 1
+                ElseIf Board(Row, Column) = "-" Then
+                    LocationsLeft += 1
+                End If
+            Next
+        Next
+        Return ShipsLeft / (LocationsLeft + ShipsLeft)
+    End Function
+
     Sub PrintBoard(ByVal Board(,) As Char)
         Dim Row As Integer
         Dim Column As Integer
@@ -187,6 +246,7 @@ Module Module1
         Dim GameWon As Boolean = False
         Do
             PrintBoard(Board)
+            Console.WriteLine("The probability the next shot of hitting a ship is " & CalculateProbability(Board))
             MakePlayerMove(Board, Ships)
             GameWon = CheckWin(Board)
             If GameWon Then
