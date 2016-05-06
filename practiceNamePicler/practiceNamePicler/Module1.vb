@@ -1,5 +1,6 @@
 ﻿Module Module1
     Sub Main()
+        'Dim Names As String() = {"Ben", "Thor", "Zoe", "Kate"}
         Dim Names(4) As String
         Dim PlayerName As String
         Dim Max As Integer
