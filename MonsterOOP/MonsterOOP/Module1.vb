@@ -61,7 +61,7 @@
                 Do
                     DisplayMoveOptions()
                     MoveDirection = GetMove()
-                    ValidMove = CheckValidMove(MoveDirection)
+                    ValidMove = CheckValidMove(MoveDirection, NS, WE, Player.GetPosition)
                 Loop Until ValidMove
                 If MoveDirection <> "M" Then
                     Cavern.PlaceItem(Player.GetPosition, " ")
@@ -135,14 +135,21 @@
             Console.WriteLine("Maybe you will have better luck next time you play MONSTER! ")
             Console.WriteLine()
         End Sub
-        Public Function CheckValidMove(ByVal Direction As Char) As Boolean
-            Dim ValidMove As Boolean
-            ValidMove = True
-            If Not (Direction = "N" Or Direction = "S" Or Direction = "W" Or
-           Direction = "E" Or Direction = "M") Then
-                ValidMove = False
+        Public Function CheckValidMove(ByVal Direction As Char, ByVal width As Integer, ByVal height As Integer, ByVal playerPosition As CellReference) As Boolean
+            If Not (Direction = "N" Or Direction = "S" Or Direction = "W" Or Direction = "E" Or Direction = "M") Then
+                Return False
             End If
-            Return ValidMove
+            Select Case Direction
+                Case "N"
+                    playerPosition.NoOfCellsSouth -= 1
+                Case "S"
+                    playerPosition.NoOfCellsSouth += 1
+                Case "W"
+                    playerPosition.NoOfCellsEast -= 1
+                Case "E"
+                    playerPosition.NoOfCellsEast += 1
+            End Select
+            Return (playerPosition.NoOfCellsEast >= 0 And playerPosition.NoOfCellsEast < width) And (playerPosition.NoOfCellsSouth >= 0 And playerPosition.NoOfCellsSouth < height)
         End Function
         Public Function SetPositionOfItem(ByVal Item As Char) As CellReference
             Dim Position As CellReference
