@@ -40,6 +40,7 @@
         Private Player As New Character
         Private Cavern As New Grid(NS, WE)
         Private Monster As New Enemy
+        Private Monster2 As New Enemy
         Private Flask As New Item
         Private Trap1 As New Trap
         Private Trap2 As New Trap
@@ -109,6 +110,21 @@
                             Cavern.Display(Monster.GetAwake)
                             Count = Count + 1
                         Loop Until Count = 2 Or Eaten
+                    End If
+                    If Monster2.GetAwake And Not Eaten And Not FlaskFound Then
+                        Cavern.PlaceItem(Monster2.GetPosition, " ")
+                        Position = Monster2.GetPosition
+                        Monster2.MakeMove(Player.GetPosition)
+                        Cavern.PlaceItem(Monster2.GetPosition, "M")
+                        If Monster2.CheckIfSameCell(Flask.GetPosition) Then
+                            Flask.SetPosition(Position)
+                            Cavern.PlaceItem(Position, "F")
+                        End If
+                        Eaten = Monster2.CheckIfSameCell(Player.GetPosition)
+                        Console.WriteLine()
+                        Console.WriteLine("Press Enter key to continue")
+                        Console.ReadLine()
+                        Cavern.Display(Monster2.GetAwake)
                     End If
                     If Eaten Then
                         DisplayLostGameMessage()
@@ -187,6 +203,7 @@
                 Trap3.SetPosition(SetPositionOfItem("T"))
 
                 Monster.SetPosition(SetPositionOfItem("M"))
+                Monster2.SetPosition(SetPositionOfItem("M"))
                 Flask.SetPosition(SetPositionOfItem("F"))
             Else
                 Position.NoOfCellsEast = 4
