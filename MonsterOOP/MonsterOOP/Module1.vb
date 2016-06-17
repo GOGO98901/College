@@ -80,10 +80,14 @@
                     Eaten = Monster.CheckIfSameCell(Player.GetPosition)
                     'This selection structure checks to see if the player has triggered one of the traps in the cavern
                     If Not Monster.GetAwake And Not FlaskFound And Not Eaten Then
-                        If (Player.CheckIfSameCell(Trap1.GetPosition) And Not Trap1.GetTriggered Or Player.CheckIfSameCell(Trap2.GetPosition) And Not Trap2.GetTriggered) Then
+                        If Player.CheckIfSameCell(Trap1.GetPosition) And Not Trap1.GetTriggered Then
                             Monster.ChangeSleepStatus()
                             DisplayTrapMessage()
                             Cavern.Display(Monster.GetAwake)
+                        End If
+                        If Player.CheckIfSameCell(Trap2.GetPosition) And Not Trap2.GetTriggered Then
+                            DisplayTrapPitMessage(True)
+                            Eaten = True
                         End If
                         If Player.CheckIfSameCell(Trap3.GetPosition) And Not Trap3.GetTriggered Then
                             Cavern.PlaceItem(Player.GetPosition, " ")
@@ -103,6 +107,10 @@
                                 Flask.SetPosition(Position)
                                 Cavern.PlaceItem(Position, "F")
                             End If
+                            If Monster.CheckIfSameCell(Trap2.GetPosition) Then
+                                FlaskFound = True
+                                DisplayTrapPitMessage(False)
+                            End If
                             Eaten = Monster.CheckIfSameCell(Player.GetPosition)
                             Console.WriteLine()
                             Console.WriteLine("Press Enter key to continue")
@@ -120,6 +128,10 @@
                             Flask.SetPosition(Position)
                             Cavern.PlaceItem(Position, "F")
                         End If
+                        If Monster2.CheckIfSameCell(Trap2.GetPosition) Then
+                            FlaskFound = True
+                            DisplayTrapPitMessage(False)
+                        End If
                         Eaten = Monster2.CheckIfSameCell(Player.GetPosition)
                         Console.WriteLine()
                         Console.WriteLine("Press Enter key to continue")
@@ -131,6 +143,8 @@
                     End If
                 End If
             Loop Until Eaten Or FlaskFound Or MoveDirection = "M"
+            Console.WriteLine("Press Enter key to continue")
+            Console.ReadLine()
         End Sub
         Public Sub DisplayMoveOptions()
             Console.WriteLine()
@@ -156,13 +170,21 @@
             Console.WriteLine("On no! You have set off a trap. Watch out, the monster is now awake!")
             Console.WriteLine()
         End Sub
+        Public Sub DisplayTrapPitMessage(ByVal player As Boolean)
+            If player Then
+                Console.WriteLine("On no! You have fallen into the pit of doom!.")
+            Else
+                Console.WriteLine("The Monster has fallen into the pit of doom!.")
+            End If
+            Console.WriteLine()
+        End Sub
         Public Sub DisplayTrapTeleportMessage()
             Cavern.Display(Monster.GetAwake)
             Console.WriteLine("On no! You have set off a teleport trap. Watch out, you are somewhere else on the board!")
             Console.WriteLine()
         End Sub
         Public Sub DisplayLostGameMessage()
-            Console.WriteLine("ARGHHHHHH! The monster has eaten you. GAMEOVER.")
+            Console.WriteLine("ARGHHHHHH! The monster has beaten you. GAMEOVER.")
             Console.WriteLine("Maybe you will have better luck next time you play MONSTER! ")
             Console.WriteLine()
         End Sub
