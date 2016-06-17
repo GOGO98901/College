@@ -1,5 +1,6 @@
 ﻿Module Module1
     Sub Main()
+        Console.Title = "Monster Game OOP"
         Dim Choice As Integer = 0
         While Choice <> 9
             DisplayMenu()
@@ -13,6 +14,7 @@
         End While
     End Sub
     Public Sub DisplayMenu()
+        Console.Clear()
         Console.WriteLine("MAIN MENU")
         Console.WriteLine()
         Console.WriteLine("1. Start new game")
@@ -22,10 +24,11 @@
         Console.Write("Please enter your choice: ")
     End Sub
     Public Function GetMainMenuChoice() As Integer
-        Dim Choice As Integer
-        Choice = CInt(Console.ReadLine())
-        Console.WriteLine()
-        Return Choice
+        Dim input As String = Console.ReadLine()
+        If IsNumeric(input) Then
+            Return CInt(input)
+        End If
+        Return 0
     End Function
     Structure CellReference
         Dim NoOfCellsEast As Integer
@@ -40,6 +43,7 @@
         Private Flask As New Item
         Private Trap1 As New Trap
         Private Trap2 As New Trap
+        Private Trap3 As New Trap
         Private TrainingGame As Boolean
         Public Sub New(ByVal IsATrainingGame As Boolean)
             TrainingGame = IsATrainingGame
@@ -61,7 +65,7 @@
                 Do
                     DisplayMoveOptions()
                     MoveDirection = GetMove()
-                    ValidMove = CheckValidMove(MoveDirection, NS, WE, Player.GetPosition)
+                    ValidMove = CheckValidMove(MoveDirection, WE, NS, Player.GetPosition)
                 Loop Until ValidMove
                 If MoveDirection <> "M" Then
                     Cavern.PlaceItem(Player.GetPosition, " ")
@@ -74,12 +78,18 @@
                     End If
                     Eaten = Monster.CheckIfSameCell(Player.GetPosition)
                     'This selection structure checks to see if the player has triggered one of the traps in the cavern
-                    If Not Monster.GetAwake And Not FlaskFound And Not Eaten And
-                   (Player.CheckIfSameCell(Trap1.GetPosition) And Not Trap1.GetTriggered Or
-                   Player.CheckIfSameCell(Trap2.GetPosition) And Not Trap2.GetTriggered) Then
-                        Monster.ChangeSleepStatus()
-                        DisplayTrapMessage()
-                        Cavern.Display(Monster.GetAwake)
+                    If Not Monster.GetAwake And Not FlaskFound And Not Eaten Then
+                        If (Player.CheckIfSameCell(Trap1.GetPosition) And Not Trap1.GetTriggered Or Player.CheckIfSameCell(Trap2.GetPosition) And Not Trap2.GetTriggered) Then
+                            Monster.ChangeSleepStatus()
+                            DisplayTrapMessage()
+                            Cavern.Display(Monster.GetAwake)
+                        End If
+                        If Player.CheckIfSameCell(Trap3.GetPosition) And Not Trap3.GetTriggered Then
+                            Cavern.PlaceItem(Player.GetPosition, " ")
+                            Player.SetPosition(GetNewRandomPosition())
+                            Cavern.PlaceItem(Player.GetPosition, "*")
+                            DisplayTrapTeleportMessage()
+                        End If
                     End If
                     If Monster.GetAwake And Not Eaten And Not FlaskFound Then
                         Count = 0
@@ -130,6 +140,11 @@
             Console.WriteLine("On no! You have set off a trap. Watch out, the monster is now awake!")
             Console.WriteLine()
         End Sub
+        Public Sub DisplayTrapTeleportMessage()
+            Cavern.Display(Monster.GetAwake)
+            Console.WriteLine("On no! You have set off a teleport trap. Watch out, you are somewhere else on the board!")
+            Console.WriteLine()
+        End Sub
         Public Sub DisplayLostGameMessage()
             Console.WriteLine("ARGHHHHHH! The monster has eaten you. GAMEOVER.")
             Console.WriteLine("Maybe you will have better luck next time you play MONSTER! ")
@@ -149,7 +164,7 @@
                 Case "E"
                     playerPosition.NoOfCellsEast += 1
             End Select
-            Return (playerPosition.NoOfCellsEast >= 0 And playerPosition.NoOfCellsEast < width) And (playerPosition.NoOfCellsSouth >= 0 And playerPosition.NoOfCellsSouth < height)
+            Return (playerPosition.NoOfCellsEast >= 0 And playerPosition.NoOfCellsEast <= width) And (playerPosition.NoOfCellsSouth >= 0 And playerPosition.NoOfCellsSouth <= height)
         End Function
         Public Function SetPositionOfItem(ByVal Item As Char) As CellReference
             Dim Position As CellReference
@@ -169,6 +184,7 @@
                 Cavern.PlaceItem(Position, "*")
                 Trap1.SetPosition(SetPositionOfItem("T"))
                 Trap2.SetPosition(SetPositionOfItem("T"))
+                Trap3.SetPosition(SetPositionOfItem("T"))
 
                 Monster.SetPosition(SetPositionOfItem("M"))
                 Flask.SetPosition(SetPositionOfItem("F"))
@@ -223,14 +239,15 @@
             Next
         End Sub
         Public Sub Display(ByVal MonsterAwake As Boolean)
+            Console.Clear()
+            Dim ShowBoard As Boolean = True
             Dim Count1 As Integer
             Dim Count2 As Integer
             For Count1 = 0 To NS
                 Console.WriteLine(" ------------- ")
 
                 For Count2 = 0 To WE
-                    If CavernState(Count1, Count2) = " " Or CavernState(Count1,
-                   Count2) = "*" Or (CavernState(Count1, Count2) = "M" And MonsterAwake) Then
+                    If ShowBoard Or CavernState(Count1, Count2) = " " Or CavernState(Count1, Count2) = "*" Or (CavernState(Count1, Count2) = "M" And MonsterAwake) Then
                         Console.Write("|" & CavernState(Count1, Count2))
                     Else
                         Console.Write("| ")
