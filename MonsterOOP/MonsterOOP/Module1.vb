@@ -61,8 +61,8 @@
             Dim Position As CellReference
             Eaten = False
             FlaskFound = False
-            Cavern.Display(Monster.GetAwake)
             Do
+                Cavern.Display(Monster.GetAwake)
                 Do
                     DisplayMoveOptions()
                     MoveDirection = GetMove()
@@ -221,7 +221,7 @@
                 Player.SetPosition(Position)
                 Cavern.PlaceItem(Position, "*")
                 Trap1.SetPosition(SetPositionOfItem("T"))
-                Trap2.SetPosition(SetPositionOfItem("T"))
+                Trap2.SetPosition(SetPositionOfItem("D"))
                 Trap3.SetPosition(SetPositionOfItem("T"))
 
                 Monster.SetPosition(SetPositionOfItem("M"))
@@ -279,7 +279,7 @@
         End Sub
         Public Sub Display(ByVal MonsterAwake As Boolean)
             Console.Clear()
-            Dim ShowBoard As Boolean = True
+            Dim ShowBoard As Boolean = False
             Dim Count1 As Integer
             Dim Count2 As Integer
             For Count1 = 0 To NS
