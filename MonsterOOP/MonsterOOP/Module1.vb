@@ -36,7 +36,7 @@
     End Structure
     Class Game
         Const NS As Integer = 7
-        Const WE As Integer = 8
+        Const WE As Integer = 10
         Private Player As New Character
         Private Cavern As New Grid(NS, WE)
         Private Monster As New Enemy
@@ -62,22 +62,19 @@
             Dim Position As CellReference
             Eaten = False
             FlaskFound = False
-            Cavern.Display(False)
             Do
-                Dim InputDisplay As Boolean = False
                 Do
-                    If InputDisplay Then Cavern.Display(Monster2.GetAwake)
+                    Cavern.Display(Monster2.GetAwake)
                     DisplayMoveOptions()
                     MoveDirection = GetMove()
                     ValidMove = CheckValidMove(MoveDirection)
                     Console.Clear()
-                    InputDisplay = True
                 Loop Until ValidMove
+                Cavern.Display(Monster2.GetAwake)
                 If MoveDirection <> "M" Then
                     Cavern.PlaceItem(Player.GetPosition, " ")
                     Player.MakeMove(MoveDirection)
                     Cavern.PlaceItem(Player.GetPosition, "*")
-                    Cavern.Display(Monster.GetAwake)
                     FlaskFound = Player.CheckIfSameCell(Flask.GetPosition)
                     If FlaskFound Then
                         DisplayWonGameMessage()
@@ -88,7 +85,6 @@
                         If Player.CheckIfSameCell(Trap1.GetPosition) And Not Trap1.GetTriggered Then
                             Monster.ChangeSleepStatus()
                             DisplayTrapMessage()
-                            Cavern.Display(Monster.GetAwake)
                         End If
                         If Player.CheckIfSameCell(Trap2.GetPosition) And Not Trap2.GetTriggered Then
                             DisplayTrapPitMessage(True)
@@ -119,7 +115,8 @@
                             Eaten = Monster.CheckIfSameCell(Player.GetPosition)
                             Console.WriteLine()
                             Console.WriteLine("Press Enter key to continue")
-                            Console.ReadLine()
+                            Console.Read()
+                            Console.Clear()
                             Cavern.Display(Monster.GetAwake)
                             Count = Count + 1
                         Loop Until Count = 2 Or Eaten
@@ -140,8 +137,8 @@
                         Eaten = Monster2.CheckIfSameCell(Player.GetPosition)
                         Console.WriteLine()
                         Console.WriteLine("Press Enter key to continue")
-                        Console.ReadLine()
-                        Cavern.Display(Monster2.GetAwake)
+                        Console.Read()
+                        Console.Clear()
                     End If
                     If Eaten Then
                         DisplayLostGameMessage()
@@ -283,7 +280,7 @@
             Next
         End Sub
         Public Sub Display(ByVal MonsterAwake As Boolean)
-            Dim ShowBoard As Boolean = False
+            Dim ShowBoard As Boolean = True
             Dim Count1 As Integer
             Dim Count2 As Integer
             Dim Spacer As String = " "
