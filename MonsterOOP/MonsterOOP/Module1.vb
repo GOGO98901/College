@@ -35,7 +35,7 @@
         Dim NoOfCellsSouth As Integer
     End Structure
     Class Game
-        Const NS As Integer = 6
+        Const NS As Integer = 7
         Const WE As Integer = 8
         Private Player As New Character
         Private Cavern As New Grid(NS, WE)
@@ -334,11 +334,7 @@
             Return Awake
         End Function
         Public Overridable Sub ChangeSleepStatus()
-            If Awake Then
-                Awake = False
-            Else
-                Awake = True
-            End If
+            Awake = Not Awake
         End Sub
         Public Sub New()
             Awake = False
