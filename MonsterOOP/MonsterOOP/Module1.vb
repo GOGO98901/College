@@ -35,8 +35,8 @@
         Dim NoOfCellsSouth As Integer
     End Structure
     Class Game
-        Const NS As Integer = 4
-        Const WE As Integer = 6
+        Const NS As Integer = 6
+        Const WE As Integer = 8
         Private Player As New Character
         Private Cavern As New Grid(NS, WE)
         Private Monster As New Enemy
@@ -64,11 +64,14 @@
             FlaskFound = False
             Cavern.Display(False)
             Do
+                Dim InputDisplay As Boolean = False
                 Do
+                    If InputDisplay Then Cavern.Display(Monster2.GetAwake)
                     DisplayMoveOptions()
                     MoveDirection = GetMove()
                     ValidMove = CheckValidMove(MoveDirection)
                     Console.Clear()
+                    InputDisplay = True
                 Loop Until ValidMove
                 If MoveDirection <> "M" Then
                     Cavern.PlaceItem(Player.GetPosition, " ")
@@ -283,8 +286,13 @@
             Dim ShowBoard As Boolean = False
             Dim Count1 As Integer
             Dim Count2 As Integer
+            Dim Spacer As String = " "
+            For Count1 = 0 To WE
+                Spacer += "--"
+            Next
+            Spacer = Spacer.Substring(0, Spacer.LastIndexOf("-"))
             For Count1 = 0 To NS
-                Console.WriteLine(" ------------- ")
+                Console.WriteLine(Spacer)
                 For Count2 = 0 To WE
                     If ShowBoard Or CavernState(Count1, Count2) = " " Or CavernState(Count1, Count2) = "*" Or (CavernState(Count1, Count2) = "M" And MonsterAwake) Then
                         Console.Write("|" & CavernState(Count1, Count2))
@@ -294,7 +302,7 @@
                 Next
                 Console.WriteLine("|")
             Next
-            Console.WriteLine(" ------------- ")
+            Console.WriteLine(Spacer)
             Console.WriteLine()
         End Sub
         Public Sub PlaceItem(ByVal Position As CellReference, ByVal Item As Char)
