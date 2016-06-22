@@ -53,6 +53,7 @@
             Play()
         End Sub
         Public Sub Play()
+            Console.Clear()
             Dim Count As Integer
             Dim Eaten As Boolean
             Dim FlaskFound As Boolean
@@ -61,12 +62,13 @@
             Dim Position As CellReference
             Eaten = False
             FlaskFound = False
+            Cavern.Display(False)
             Do
-                Cavern.Display(Monster.GetAwake)
                 Do
                     DisplayMoveOptions()
                     MoveDirection = GetMove()
                     ValidMove = CheckValidMove(MoveDirection)
+                    Console.Clear()
                 Loop Until ValidMove
                 If MoveDirection <> "M" Then
                     Cavern.PlaceItem(Player.GetPosition, " ")
@@ -156,8 +158,7 @@
             Console.WriteLine()
         End Sub
         Public Function GetMove() As Char
-            Dim Move As Char
-            Move = Console.ReadLine
+            Dim Move As Char = Console.ReadLine.ToUpper
             Console.WriteLine()
             Return Move
         End Function
@@ -279,13 +280,11 @@
             Next
         End Sub
         Public Sub Display(ByVal MonsterAwake As Boolean)
-            Console.Clear()
             Dim ShowBoard As Boolean = False
             Dim Count1 As Integer
             Dim Count2 As Integer
             For Count1 = 0 To NS
                 Console.WriteLine(" ------------- ")
-
                 For Count2 = 0 To WE
                     If ShowBoard Or CavernState(Count1, Count2) = " " Or CavernState(Count1, Count2) = "*" Or (CavernState(Count1, Count2) = "M" And MonsterAwake) Then
                         Console.Write("|" & CavernState(Count1, Count2))
@@ -380,8 +379,7 @@
             NoOfCellsSouth = Position.NoOfCellsSouth
         End Sub
         Public Function CheckIfSameCell(ByVal Position As CellReference) As Boolean
-            If NoOfCellsEast = Position.NoOfCellsEast And NoOfCellsSouth =
-           Position.NoOfCellsSouth Then
+            If NoOfCellsEast = Position.NoOfCellsEast And NoOfCellsSouth = Position.NoOfCellsSouth Then
                 Return True
             Else
                 Return False
