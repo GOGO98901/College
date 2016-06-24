@@ -33,7 +33,7 @@ Public Class Form1
     End Sub
 
     Private Sub btnDataBaseAddFields(sender As System.Object, e As System.EventArgs) Handles btnDBaddFields.Click
-        data.CreateField("Exams", "[MAxScore] Int")
+        data.CreateField("Exams", "[MaxScore] Int")
         data.CreateField("Students", "[DateofBirth] Varchar(20)")
         data.CreateField("Students", "[Gender] Varchar(20)")
         data.CreateField("Results", "[ExamDate] Int")
