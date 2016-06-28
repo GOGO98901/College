@@ -116,9 +116,9 @@ Class DataBase
     Sub CreateField(Table As String, Command As String)
         Try
             RunNonQuery("ALTER TABLE [" & Table & "] ADD COLUMN " & Command)
-            MsgBox("Field Added Sucessfully")
+            MsgBox("Field Added Sucessfully '" & Command & "'")
         Catch ex As Exception
-            MsgBox("Field NOT Added Sucessfully " & ex.Message)
+            MsgBox("Field NOT Added Sucessfully '" & Command & "' " & ex.Message)
         End Try
     End Sub
 
