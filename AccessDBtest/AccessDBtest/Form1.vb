@@ -34,6 +34,7 @@ Public Class Form1
 
     Private Sub btnDataBaseAddFields(sender As System.Object, e As System.EventArgs) Handles btnDBaddFields.Click
         data.CreateField("Exams", "[MaxScore] Int")
+        data.CreateField("Exams", "[Weight] Double")
         data.CreateField("Students", "[DateofBirth] Varchar(20)")
         data.CreateField("Students", "[Gender] Varchar(20)")
         data.CreateField("Results", "[ExamDate] Int")
@@ -164,7 +165,7 @@ Class DataBase
             MsgBox("Record Added Sucessfully")
             Return True
         Catch ex As Exception
-            MsgBox("Record NOT Added Sucessfully '" & Command() & "' " & ex.Message)
+            MsgBox("Record NOT Added Sucessfully " & ex.Message)
             Return False
         End Try
     End Function
