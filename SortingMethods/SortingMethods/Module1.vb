@@ -3,13 +3,13 @@
     Sub Main()
         Dim N, Choice As Integer
         Dim StartTime, StopTime As Long
-        Dim Numbers(30000) As Integer
+        Dim Numbers(Integer.MaxValue / 16) As Integer
         Do
             DisplayMenu()
             Choice = Console.ReadLine
             Select Case Choice
                 Case 1
-                    Console.Write("Enter the size of the array of random numbers (Max 30000): ")
+                    Console.Write("Enter the size of the array of random numbers (Max " & (Integer.MaxValue / 16) & "): ")
                     N = Console.ReadLine
                     GenerateArray(Numbers, N)
                     DisplayArray(Numbers, N)
@@ -76,7 +76,17 @@
     End Sub
 
     Sub ExchangeSort(Numbers() As Integer, Limit As Integer)
-        'write Exchange Sort code here
+        For i = 0 To (Limit - 1) Step 1
+            For j = 0 To Limit Step 1
+                Dim nI, nJ As Integer
+                nI = Numbers(i)
+                nJ = Numbers(j)
+                If nI > nJ Then
+                    Numbers(j) = nI
+                    Numbers(i) = nJ
+                End If
+            Next
+        Next
     End Sub
     Sub BubbleSort(Numbers() As Integer, Limit As Integer)
         'write Exchange Sort code here
