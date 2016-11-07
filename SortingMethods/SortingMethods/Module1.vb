@@ -89,7 +89,20 @@
         Next
     End Sub
     Sub BubbleSort(Numbers() As Integer, Limit As Integer)
-        'write Exchange Sort code here
+        Dim sorted As Boolean
+        Dim i As Integer = 2
+        While Not sorted
+            sorted = True
+            For i2 = Limit To i Step -1
+                Dim t1 = Numbers(i2)
+                Dim t2 = Numbers(i2 - 1)
+                If t1 > t2 Then Continue For
+                sorted = False
+                Numbers(i2) = t2
+                Numbers(i2 - 1) = t1
+            Next
+            i += 1
+        End While
     End Sub
     Sub InsertionSort(Numbers() As Integer, Limit As Integer)
         'write Insertion Sort code here
