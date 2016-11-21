@@ -27,7 +27,6 @@ Partial Class Form1
         Me.cmdPop = New System.Windows.Forms.Button()
         Me.lstDisplay = New System.Windows.Forms.ListBox()
         Me.cmdClear = New System.Windows.Forms.Button()
-        Me.lblItemRemoved = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
         'txtAddItem
@@ -72,20 +71,11 @@ Partial Class Form1
         Me.cmdClear.Text = "Clear"
         Me.cmdClear.UseVisualStyleBackColor = True
         '
-        'lblItemRemoved
-        '
-        Me.lblItemRemoved.AutoSize = True
-        Me.lblItemRemoved.Location = New System.Drawing.Point(33, 286)
-        Me.lblItemRemoved.Name = "lblItemRemoved"
-        Me.lblItemRemoved.Size = New System.Drawing.Size(0, 13)
-        Me.lblItemRemoved.TabIndex = 6
-        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(491, 402)
-        Me.Controls.Add(Me.lblItemRemoved)
         Me.Controls.Add(Me.cmdClear)
         Me.Controls.Add(Me.lstDisplay)
         Me.Controls.Add(Me.cmdPop)
@@ -102,6 +92,5 @@ Partial Class Form1
     Friend WithEvents cmdPop As System.Windows.Forms.Button
     Friend WithEvents lstDisplay As System.Windows.Forms.ListBox
     Friend WithEvents cmdClear As System.Windows.Forms.Button
-    Friend WithEvents lblItemRemoved As System.Windows.Forms.Label
 
 End Class
