@@ -71,6 +71,7 @@ Partial Class Form1
         Me.cmdDisplay.TabIndex = 5
         Me.cmdDisplay.Text = "Display"
         Me.cmdDisplay.UseVisualStyleBackColor = True
+        Me.cmdDisplay.Visible = False
         '
         'lblItemRemoved
         '
