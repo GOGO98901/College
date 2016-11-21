@@ -13,12 +13,12 @@ Public Class Form1
         proj.display(lstDisplay)
     End Sub
 
-    Private Sub cmdAdd_Click(sender As System.Object, e As System.EventArgs) Handles cmdPush.Click
+    Private Sub cmdPush_Click(sender As System.Object, e As System.EventArgs) Handles cmdPush.Click
         proj.push(txtAddItem.Text)
         proj.display(lstDisplay)
     End Sub
 
-    Private Sub cmdRemove_Click(sender As System.Object, e As System.EventArgs) Handles cmdPop.Click
+    Private Sub cmdPop_Click(sender As System.Object, e As System.EventArgs) Handles cmdPop.Click
         proj.remove()
         proj.display(lstDisplay)
     End Sub
