@@ -1,7 +1,7 @@
 # College Projcets
 This repository contains all/most of my college projects
 
-|language|config files|
+|language|config file(s)|
 |-------:|:-:|
 |[Java](/java)|[.gitignore](/java/.gitignore)|
 |[Haskell](/haskell)| |
