@@ -28,14 +28,10 @@ Module PredatorPrey
                     Variability = 0
                     FixedInitialLocations = True
                 Else
-                    Console.Write("Landscape Size: ")
-                    LandscapeSize = CInt(Console.ReadLine())
-                    Console.Write("Initial number of warrens: ")
-                    InitialWarrenCount = CInt(Console.ReadLine())
-                    Console.Write("Initial number of foxes: ")
-                    InitialFoxCount = CInt(Console.ReadLine())
-                    Console.Write("Randomness variability (percent): ")
-                    Variability = CInt(Console.ReadLine())
+                    LandscapeSize = checkInt("Landscape Size", 3, 18)
+                    InitialWarrenCount = checkInt("Initial number of warrens", 1, LandscapeSize ^ 2)
+                    InitialFoxCount = checkInt("Initial number of foxes", 1, LandscapeSize)
+                    Variability = checkInt("Randomness variability (percent)", 1, 100)
                     FixedInitialLocations = False
                 End If
                 Dim Sim As New Simulation(LandscapeSize, InitialWarrenCount, InitialFoxCount, Variability, FixedInitialLocations)
@@ -43,6 +39,19 @@ Module PredatorPrey
         Loop While MenuOption <> 3
         Console.ReadKey()
     End Sub
+
+    Function checkInt(text As String, a As Integer, b As Integer) As Integer
+        Console.WriteLine(text)
+        Console.Write("> ")
+        Dim input = Console.ReadLine()
+        If (IsNumeric(input)) Then
+            If input >= a And input <= b Then
+                Return input
+            End If
+        End If
+        Console.WriteLine("Value must be between " & a & " and " & b)
+        Return checkInt(text, a, b)
+    End Function
 
     Class Location
         Public Fox As Fox
@@ -117,11 +126,14 @@ Module PredatorPrey
             Console.ReadKey()
         End Sub
 
+        Private Property Initial As Integer
+
         Private Function InputCoordinate(ByVal CoordinateName As Char) As Integer
             Dim Coordinate As Integer
             Console.Write("  Input " & CoordinateName & " coordinate: ")
-            Coordinate = CInt(Console.ReadLine())
-            Return Coordinate
+            Coordinate = Console.ReadLine()
+            If IsNumeric(Coordinate) Then Return Coordinate
+            Return InputCoordinate(CoordinateName)
         End Function
 
         Private Sub AdvanceTimePeriod()
@@ -674,5 +686,16 @@ Module PredatorPrey
         Public Function GetReproductionRate() As Double
             Return ReproductionRate
         End Function
+    End Class
+
+    Class MutatedAnimal
+        Inherits Animal
+        Private Const DefaultLifespan As Integer = 2
+        Private Const DefaultReproductionRate As Double = 1.75
+        Private Const DefaultProbabilityDeathOtherCauses As Double = 0.6
+
+        Public Sub New(ByVal Variability As Integer)
+            MyBase.New(DefaultLifespan, DefaultProbabilityDeathOtherCauses, Variability)
+        End Sub
     End Class
 End Module
