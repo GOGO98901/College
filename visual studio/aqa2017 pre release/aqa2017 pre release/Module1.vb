@@ -196,10 +196,10 @@ Module PredatorPrey
             If NewFoxCount > 0 Then
                 If ShowDetail Then
                     Console.WriteLine("New foxes born: ")
-                    For f = 0 To NewFoxCount - 1
-                        CreateNewFox()
-                    Next
                 End If
+                For f = 0 To NewFoxCount - 1
+                    CreateNewFox()
+                Next
             End If
             If ShowDetail Then
                 Console.ReadKey()
